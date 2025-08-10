@@ -2,7 +2,7 @@ import click
 import sys
 import logging
 from evidence_extractor.utils.logging_config import setup_logging
-
+from evidence_extractor.core.ingest import ingest_pdf
 logger = logging.getLogger(__name__)
 
 @click.group()
@@ -27,10 +27,16 @@ def cli():
 )
 def extract(pdf_path: str, output_path: str):
     logger.info("--- Evidence Extractor ---")
-    logger.info("Phase 4: Logging and Configuration Initialized.")
     logger.info(f"Received request to process PDF: {pdf_path}")
+    document = ingest_pdf(pdf_path)
+    if not document:
+        logger.error("Halting execution due to ingestion failure.")
+        sys.exit(1)
+
     logger.info(f"Output will be saved to: {output_path}")
-    logger.warning("(Note: Extraction logic not yet implemented.)")
+    logger.warning("(Note: Text extraction and analysis not yet implemented.)")
+    document.close()
+    logger.info("Processing complete.")
     sys.exit(0)
 
 if __name__ == "__main__":
