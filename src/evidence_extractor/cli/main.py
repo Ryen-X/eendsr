@@ -3,6 +3,8 @@ import sys
 import logging
 from evidence_extractor.utils.logging_config import setup_logging
 from evidence_extractor.core.ingest import ingest_pdf
+from evidence_extractor.core.preprocess import extract_text_from_doc
+
 logger = logging.getLogger(__name__)
 
 @click.group()
@@ -32,9 +34,14 @@ def extract(pdf_path: str, output_path: str):
     if not document:
         logger.error("Halting execution due to ingestion failure.")
         sys.exit(1)
+    pages_text = extract_text_from_doc(document)
+    if not pages_text:
+        logger.error("Text extraction failed. No text could be retrieved.")
+        document.close()
+        sys.exit(1)
 
-    logger.info(f"Output will be saved to: {output_path}")
-    logger.warning("(Note: Text extraction and analysis not yet implemented.)")
+    logger.info(f"Successfully extracted text from {len(pages_text)} pages.")
+    logger.warning("(Note: Analysis and output generation not yet implemented.)")
     document.close()
     logger.info("Processing complete.")
     sys.exit(0)
