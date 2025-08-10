@@ -1,7 +1,7 @@
 import logging
 import re
-from typing import Dict
-import fitz  # PyMuPDF
+from typing import Dict, Tuple
+import fitz
 
 logger = logging.getLogger(__name__)
 
@@ -20,18 +20,18 @@ def extract_text_from_doc(document: fitz.Document) -> Dict[int, str]:
         except Exception as e:
             logger.error(f"Could not extract text from page {page_num + 1}. Error: {e}")
             extracted_data[page_num] = ""
+
     logger.info(f"Text extraction complete. Total characters extracted: {total_chars}.")
     return extracted_data
-
-def clean_and_consolidate_text(pages_text: Dict[int, str]) -> str:
+def clean_and_consolidate_text(pages_text: Dict[int, str]) -> Tuple[str, str]:
     logger.info("Starting text cleaning and consolidation.")
     full_text = "\n".join(pages_text.values())
     original_len = len(full_text)
-    cleaned_text = re.sub(r'(\w+)-\n(\w+)', r'\1\2', full_text)
-    cleaned_text = re.sub(r'\n\s*\d+\s*\n', '\n', cleaned_text)
-    cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
+    text_with_newlines = re.sub(r'(\w+)-\n(\w+)', r'\1\2', full_text)
+    temp_text = re.sub(r'\n\s*\d+\s*\n', '\n', text_with_newlines)
+    consolidated_text = re.sub(r'\s+', ' ', temp_text).strip()
     
-    final_len = len(cleaned_text)
-    logger.info(f"Text cleaning complete. Character count reduced from {original_len} to {final_len}.")
+    final_len = len(consolidated_text)
+    logger.info(f"Text cleaning complete. Consolidated character count: {final_len}.")
     
-    return cleaned_text
+    return text_with_newlines, consolidated_text
