@@ -3,7 +3,7 @@ import sys
 import logging
 from evidence_extractor.utils.logging_config import setup_logging
 from evidence_extractor.core.ingest import ingest_pdf
-from evidence_extractor.core.preprocess import extract_text_from_doc
+from evidence_extractor.core.preprocess import extract_text_from_doc, clean_and_consolidate_text
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 @click.version_option(package_name="evidence_extractor")
 def cli():
     setup_logging()
-
 @cli.command()
 @click.option(
     "--pdf",
@@ -39,8 +38,12 @@ def extract(pdf_path: str, output_path: str):
         logger.error("Text extraction failed. No text could be retrieved.")
         document.close()
         sys.exit(1)
-
-    logger.info(f"Successfully extracted text from {len(pages_text)} pages.")
+    cleaned_text = clean_and_consolidate_text(pages_text)
+    if not cleaned_text:
+        logger.error("Text cleaning resulted in an empty string.")
+        document.close()
+        sys.exit(1)
+    logger.info("Successfully cleaned and consolidated text.")
     logger.warning("(Note: Analysis and output generation not yet implemented.)")
     document.close()
     logger.info("Processing complete.")
