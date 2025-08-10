@@ -5,6 +5,7 @@ from evidence_extractor.utils.logging_config import setup_logging
 from evidence_extractor.core.ingest import ingest_pdf
 from evidence_extractor.core.preprocess import extract_text_from_doc, clean_and_consolidate_text
 from evidence_extractor.extraction.citations import find_references_section, parse_bibliography
+from evidence_extractor.extraction.structure import detect_sections
 from evidence_extractor.models.schemas import ArticleExtraction
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,6 @@ def extract(pdf_path: str, output_path: str):
     logger.info("--- Evidence Extractor ---")
     logger.info(f"Received request to process PDF: {pdf_path}")
     extraction_result = ArticleExtraction(source_filename=pdf_path)
-
     document = ingest_pdf(pdf_path)
     if not document:
         logger.error("Halting execution due to ingestion failure.")
@@ -44,6 +44,13 @@ def extract(pdf_path: str, output_path: str):
         logger.error("Text cleaning resulted in an empty string.")
         document.close()
         sys.exit(1)
+    sections = detect_sections(text_with_newlines)
+    if sections:
+        logger.info("Detected the following document sections:")
+        for title, _ in sections:
+            logger.info(f"  - {title.capitalize()}")
+    else:
+        logger.warning("Could not detect any standard section headers.")
     references_tuple = find_references_section(text_with_newlines)
     if references_tuple:
         references_text, _ = references_tuple
