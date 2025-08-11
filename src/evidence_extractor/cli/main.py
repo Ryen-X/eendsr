@@ -4,7 +4,7 @@ import logging
 from evidence_extractor.utils.logging_config import setup_logging
 from evidence_extractor.core.ingest import ingest_pdf
 from evidence_extractor.core.preprocess import extract_text_from_doc, clean_and_consolidate_text
-from evidence_extractor.extraction.citations import find_references_section, parse_bibliography
+from evidence_extractor.extraction.citations import find_references_section, parse_bibliography, link_in_text_citations
 from evidence_extractor.extraction.structure import detect_sections
 from evidence_extractor.extraction.tables import extract_tables_from_pdf
 from evidence_extractor.models.schemas import ArticleExtraction
@@ -51,11 +51,10 @@ def extract(pdf_path: str, output_path: str):
 
     sections = detect_sections(text_with_newlines)
     if sections:
-        logger.info("Detected the following document sections:")
-        for title, _ in sections:
-            logger.info(f"  - {title.capitalize()}")
+        logger.info("Detected document sections.")
     else:
         logger.warning("Could not detect any standard section headers.")
+
     extracted_tables = extract_tables_from_pdf(pdf_path)
     if extracted_tables:
         extraction_result.tables = extracted_tables
@@ -65,11 +64,15 @@ def extract(pdf_path: str, output_path: str):
 
     references_tuple = find_references_section(text_with_newlines)
     if references_tuple:
-        references_text, _ = references_tuple
+        references_text, start_index = references_tuple
         bibliography = parse_bibliography(references_text)
         extraction_result.bibliography = bibliography
-    
-    logger.info(f"Found and parsed {len(extraction_result.bibliography)} bibliography entries.")
+        logger.info(f"Found and parsed {len(extraction_result.bibliography)} bibliography entries.")
+        main_body_text = text_with_newlines[:start_index]
+        citation_links = link_in_text_citations(main_body_text, extraction_result.bibliography)
+        if not citation_links:
+            logger.warning("Could not link any in-text citations to the bibliography.")
+
     logger.warning("(Note: Further analysis and output generation not yet implemented.)")
     
     document.close()

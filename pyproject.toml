@@ -27,6 +27,7 @@ dependencies = [
     "pymupdf>=1.23.0",
     "camelot-py[cv]>=0.11.0",
     "opencv-python-headless",
+    "thefuzz>=0.20.0",
 ]
 
 [project.urls]
