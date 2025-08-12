@@ -24,7 +24,7 @@ class QualityScore(BaseModel):
     score_name: str = Field(..., description="The name of the quality scoring system (e.g., 'Jadad', 'RoB 2').")
     score_value: str = Field(..., description="The calculated score or rating.")
     justification: Optional[str] = Field(None, description="The justification or evidence for the assigned score.")
-    provenance: Provenance
+    provenance: Optional[Provenance] = Field(None, description="The source of the quality score information, if applicable.")
 
 class Claim(BaseModel):
     claim_text: str = Field(..., description="The verbatim text of the extracted claim.")
@@ -37,7 +37,6 @@ class Claim(BaseModel):
         None,
         description="A human-readable annotation about the confidence in this claim."
     )
-
 class ExtractedTable(BaseModel):
     caption: Optional[str] = Field(None, description="The caption of the table.")
     table_data: List[List[str]] = Field(
@@ -54,6 +53,7 @@ class ArticleExtraction(BaseModel):
     source_filename: str
     title: Optional[str] = None
     authors: List[str] = Field(default_factory=list)
+    
     claims: List[Claim] = Field(default_factory=list)
     pico_elements: Optional[PICO] = None
     quality_scores: List[QualityScore] = Field(default_factory=list)

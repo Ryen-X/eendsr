@@ -8,6 +8,7 @@ from evidence_extractor.extraction.citations import find_references_section, par
 from evidence_extractor.extraction.structure import detect_sections
 from evidence_extractor.extraction.tables import extract_tables_from_pdf
 from evidence_extractor.extraction.pico import extract_pico_elements
+from evidence_extractor.extraction.methods import extract_methods_and_quality
 from evidence_extractor.models.schemas import ArticleExtraction
 from evidence_extractor.integration.gemini_client import GeminiClient
 
@@ -52,6 +53,7 @@ def extract(pdf_path: str, output_path: str):
     if not cleaned_text:
         document.close()
         sys.exit(1)
+
     text_snippet = cleaned_text[:8000]
 
     if gemini_client.is_configured():
@@ -60,21 +62,26 @@ def extract(pdf_path: str, output_path: str):
         if title:
             extraction_result.title = title.strip()
             logger.info(f"Extracted Title via Gemini: '{extraction_result.title}'")
+        
         pico_results = extract_pico_elements(gemini_client, text_snippet)
         if pico_results:
             extraction_result.pico_elements = pico_results
-            logger.info("PICO Extraction Summary:")
-            logger.info(f"  - Population: {pico_results.population}")
-            logger.info(f"  - Intervention: {pico_results.intervention}")
-            logger.info(f"  - Comparison: {pico_results.comparison}")
-            logger.info(f"  - Outcome: {pico_results.outcome}")
+            logger.info("PICO Extraction Summary complete.")
+        quality_score = extract_methods_and_quality(gemini_client, text_snippet)
+        if quality_score:
+            extraction_result.quality_scores.append(quality_score)
+            logger.info("Methodology & Quality Assessment:")
+            logger.info(f"  - Score: {quality_score.score_value}")
+            logger.info(f"  - Justification: {quality_score.justification}")
         else:
-            logger.error("Failed to extract PICO elements using Gemini.")
+            logger.error("Failed to extract methods and quality score using Gemini.")
+
     sections = detect_sections(text_with_newlines)
     extracted_tables = extract_tables_from_pdf(pdf_path)
     if extracted_tables:
         extraction_result.tables = extracted_tables
         logger.info(f"Successfully extracted {len(extracted_tables)} tables.")
+
     references_tuple = find_references_section(text_with_newlines)
     if references_tuple:
         references_text, start_index = references_tuple
@@ -82,7 +89,9 @@ def extract(pdf_path: str, output_path: str):
         extraction_result.bibliography = bibliography
         main_body_text = text_with_newlines[:start_index]
         link_in_text_citations(main_body_text, extraction_result.bibliography)
+
     logger.warning("(Note: Further analysis and output generation not yet implemented.)")
+    
     document.close()
     logger.info("Processing complete.")
     sys.exit(0)
