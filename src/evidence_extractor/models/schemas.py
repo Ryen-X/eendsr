@@ -7,7 +7,7 @@ class Provenance(BaseModel):
     line_number: Optional[int] = Field(None, description="An approximate line number on the page.")
     bounding_box: Optional[List[float]] = Field(
         None,
-        description="A list of coordinates [x0, y0, x1, y1] defining the text's location."
+        description="A list of coordinates [x0, y0, x1, y1] defining the object's location."
     )
 
 class PICO(BaseModel):
@@ -37,12 +37,18 @@ class Claim(BaseModel):
         None,
         description="A human-readable annotation about the confidence in this claim."
     )
+
 class ExtractedTable(BaseModel):
     caption: Optional[str] = Field(None, description="The caption of the table.")
     table_data: List[List[str]] = Field(
         ...,
         description="The table content, represented as a list of rows, where each row is a list of strings."
     )
+    provenance: Provenance
+
+class ExtractedFigure(BaseModel):
+    caption: str = Field(..., description="The caption of the figure.")
+    figure_type: str = Field(..., description="The type of figure (e.g., 'Graph', 'Diagram', 'Image').")
     provenance: Provenance
 
 class BibliographyItem(BaseModel):
@@ -58,39 +64,5 @@ class ArticleExtraction(BaseModel):
     pico_elements: Optional[PICO] = None
     quality_scores: List[QualityScore] = Field(default_factory=list)
     tables: List[ExtractedTable] = Field(default_factory=list)
+    figures: List[ExtractedFigure] = Field(default_factory=list)
     bibliography: Dict[str, BibliographyItem] = Field(default_factory=dict)
-
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "source_filename": "jones_et_al_2022.pdf",
-                "title": "The Efficacy of Novel Drug X in Treating Condition Y",
-                "authors": ["Jones, A.", "Smith, B."],
-                "claims": [
-                    {
-                        "claim_text": "Drug X showed a 30% improvement over placebo.",
-                        "linked_citations": ["Miller2020"],
-                        "provenance": {
-                            "source_filename": "jones_et_al_2022.pdf",
-                            "page_number": 5,
-                            "line_number": 12,
-                            "bounding_box": None,
-                        },
-                        "uncertainty_annotation": "High confidence."
-                    }
-                ],
-                "pico_elements": {
-                    "population": "Patients with moderate Condition Y",
-                    "intervention": "Daily 50mg dose of Drug X",
-                    "comparison": "Placebo",
-                    "outcome": "Reduction in symptoms after 6 weeks",
-                    "provenance": [],
-                },
-                "bibliography": {
-                    "Miller2020": {
-                        "citation_key": "Miller2020",
-                        "full_citation": "Miller, C. (2020). A prior study on Condition Y. Journal of Important Research, 15(2), 123-145."
-                    }
-                }
-            }
-        }

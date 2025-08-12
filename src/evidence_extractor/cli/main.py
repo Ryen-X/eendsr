@@ -9,6 +9,7 @@ from evidence_extractor.extraction.structure import detect_sections
 from evidence_extractor.extraction.tables import extract_tables_from_pdf
 from evidence_extractor.extraction.pico import extract_pico_elements
 from evidence_extractor.extraction.methods import extract_methods_and_quality
+from evidence_extractor.extraction.figures import extract_figures_and_captions
 from evidence_extractor.models.schemas import ArticleExtraction
 from evidence_extractor.integration.gemini_client import GeminiClient
 
@@ -66,15 +67,13 @@ def extract(pdf_path: str, output_path: str):
         pico_results = extract_pico_elements(gemini_client, text_snippet)
         if pico_results:
             extraction_result.pico_elements = pico_results
-            logger.info("PICO Extraction Summary complete.")
+        
         quality_score = extract_methods_and_quality(gemini_client, text_snippet)
         if quality_score:
             extraction_result.quality_scores.append(quality_score)
-            logger.info("Methodology & Quality Assessment:")
-            logger.info(f"  - Score: {quality_score.score_value}")
-            logger.info(f"  - Justification: {quality_score.justification}")
-        else:
-            logger.error("Failed to extract methods and quality score using Gemini.")
+        figures = extract_figures_and_captions(document, gemini_client)
+        if figures:
+            extraction_result.figures = figures
 
     sections = detect_sections(text_with_newlines)
     extracted_tables = extract_tables_from_pdf(pdf_path)
