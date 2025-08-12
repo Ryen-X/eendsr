@@ -7,6 +7,7 @@ from evidence_extractor.core.preprocess import extract_text_from_doc, clean_and_
 from evidence_extractor.extraction.citations import find_references_section, parse_bibliography, link_in_text_citations
 from evidence_extractor.extraction.structure import detect_sections
 from evidence_extractor.extraction.tables import extract_tables_from_pdf
+from evidence_extractor.extraction.pico import extract_pico_elements
 from evidence_extractor.models.schemas import ArticleExtraction
 from evidence_extractor.integration.gemini_client import GeminiClient
 
@@ -37,6 +38,7 @@ def extract(pdf_path: str, output_path: str):
     logger.info(f"Received request to process PDF: {pdf_path}")
     
     extraction_result = ArticleExtraction(source_filename=pdf_path)
+
     gemini_client = GeminiClient()
     if not gemini_client.is_configured():
         logger.warning("Gemini client is not configured. LLM-based extraction will be skipped.")
@@ -50,23 +52,29 @@ def extract(pdf_path: str, output_path: str):
     if not cleaned_text:
         document.close()
         sys.exit(1)
+    text_snippet = cleaned_text[:8000]
 
     if gemini_client.is_configured():
-        text_snippet = cleaned_text[:4000]
-        prompt = f"Based on the following text from a research paper, what is its title? Respond with only the title itself, without any introductory phrases like 'The title is:'.\n\n---\n\n{text_snippet}"
-        title = gemini_client.query(prompt)
+        prompt_title = f"Based on the following text, what is the title of this research paper? Respond with only the title.\n\n---\n\n{text_snippet[:4000]}"
+        title = gemini_client.query(prompt_title)
         if title:
             extraction_result.title = title.strip()
             logger.info(f"Extracted Title via Gemini: '{extraction_result.title}'")
+        pico_results = extract_pico_elements(gemini_client, text_snippet)
+        if pico_results:
+            extraction_result.pico_elements = pico_results
+            logger.info("PICO Extraction Summary:")
+            logger.info(f"  - Population: {pico_results.population}")
+            logger.info(f"  - Intervention: {pico_results.intervention}")
+            logger.info(f"  - Comparison: {pico_results.comparison}")
+            logger.info(f"  - Outcome: {pico_results.outcome}")
         else:
-            logger.error("Failed to extract title using Gemini.")
-
+            logger.error("Failed to extract PICO elements using Gemini.")
     sections = detect_sections(text_with_newlines)
     extracted_tables = extract_tables_from_pdf(pdf_path)
     if extracted_tables:
         extraction_result.tables = extracted_tables
         logger.info(f"Successfully extracted {len(extracted_tables)} tables.")
-
     references_tuple = find_references_section(text_with_newlines)
     if references_tuple:
         references_text, start_index = references_tuple
@@ -78,5 +86,6 @@ def extract(pdf_path: str, output_path: str):
     document.close()
     logger.info("Processing complete.")
     sys.exit(0)
+
 if __name__ == "__main__":
     cli()
