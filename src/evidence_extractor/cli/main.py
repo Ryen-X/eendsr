@@ -10,6 +10,7 @@ from evidence_extractor.extraction.tables import extract_tables_from_pdf
 from evidence_extractor.extraction.pico import extract_pico_elements
 from evidence_extractor.extraction.methods import extract_methods_and_quality
 from evidence_extractor.extraction.figures import extract_figures_and_captions
+from evidence_extractor.extraction.claims import extract_claims
 from evidence_extractor.models.schemas import ArticleExtraction
 from evidence_extractor.integration.gemini_client import GeminiClient
 
@@ -54,32 +55,36 @@ def extract(pdf_path: str, output_path: str):
     if not cleaned_text:
         document.close()
         sys.exit(1)
-
-    text_snippet = cleaned_text[:8000]
+    text_snippet_for_claims = cleaned_text[:16000]
 
     if gemini_client.is_configured():
-        prompt_title = f"Based on the following text, what is the title of this research paper? Respond with only the title.\n\n---\n\n{text_snippet[:4000]}"
-        title = gemini_client.query(prompt_title)
+        text_snippet_for_metadata = cleaned_text[:8000]
+        
+        title = gemini_client.query(f"Extract the title of this paper: {text_snippet_for_metadata[:4000]}")
         if title:
             extraction_result.title = title.strip()
-            logger.info(f"Extracted Title via Gemini: '{extraction_result.title}'")
         
-        pico_results = extract_pico_elements(gemini_client, text_snippet)
+        pico_results = extract_pico_elements(gemini_client, text_snippet_for_metadata)
         if pico_results:
             extraction_result.pico_elements = pico_results
         
-        quality_score = extract_methods_and_quality(gemini_client, text_snippet)
+        quality_score = extract_methods_and_quality(gemini_client, text_snippet_for_metadata)
         if quality_score:
             extraction_result.quality_scores.append(quality_score)
+        
         figures = extract_figures_and_captions(document, gemini_client)
         if figures:
             extraction_result.figures = figures
+        claims = extract_claims(gemini_client, text_snippet_for_claims, pdf_path)
+        if claims:
+            extraction_result.claims = claims
+            for i, claim in enumerate(claims[:3]):
+                logger.info(f"  - Extracted Claim {i+1}: {claim.claim_text[:100]}...")
 
     sections = detect_sections(text_with_newlines)
     extracted_tables = extract_tables_from_pdf(pdf_path)
     if extracted_tables:
         extraction_result.tables = extracted_tables
-        logger.info(f"Successfully extracted {len(extracted_tables)} tables.")
 
     references_tuple = find_references_section(text_with_newlines)
     if references_tuple:
