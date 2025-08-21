@@ -8,7 +8,7 @@ from PIL import Image
 logger = logging.getLogger(__name__)
 
 class GeminiClient:
-    def __init__(self, text_model_name: str = "gemini-1.5-flash-latest", vision_model_name: str = "gemini-pro-vision"):
+    def __init__(self, text_model_name: str = "gemini-2.5-pro", vision_model_name: str = "gemini-2.5-flash"):
         self.text_model = None
         self.vision_model = None
         self.api_key = None

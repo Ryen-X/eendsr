@@ -2,15 +2,13 @@ import logging
 import json
 from typing import List
 from evidence_extractor.integration.gemini_client import GeminiClient
-from evidence_extractor.models.schemas import Claim, Provenance
 
 logger = logging.getLogger(__name__)
 
-def extract_claims(
+def extract_claim_texts(
     client: GeminiClient, 
-    text_snippet: str, 
-    source_filename: str
-) -> List[Claim]:
+    text_snippet: str
+) -> List[str]:
     if not client.is_configured():
         logger.warning("Cannot extract claims; Gemini client is not configured.")
         return []
@@ -42,7 +40,7 @@ def extract_claims(
         logger.error("Received no response from Gemini for claim extraction.")
         return []
 
-    extracted_claims = []
+    extracted_claim_texts = []
     try:
         cleaned_response = response_text.strip().replace("```json", "").replace("```", "").strip()
         claims_data = json.loads(cleaned_response)
@@ -54,21 +52,13 @@ def extract_claims(
         for claim_dict in claims_data:
             claim_text = claim_dict.get("claim_text")
             if claim_text:
-                placeholder_provenance = Provenance(
-                    source_filename=source_filename,
-                    page_number=-1,
-                )
-                claim = Claim(
-                    claim_text=claim_text,
-                    provenance=placeholder_provenance
-                )
-                extracted_claims.append(claim)
+                extracted_claim_texts.append(claim_text)
         
-        logger.info(f"Successfully extracted and parsed {len(extracted_claims)} claims.")
-        return extracted_claims
+        logger.info(f"Successfully extracted text for {len(extracted_claim_texts)} claims.")
+        return extracted_claim_texts
     except json.JSONDecodeError:
         logger.error(f"Failed to decode JSON from Gemini for claim extraction. Response was:\n{response_text}")
         return []
     except Exception as e:
-        logger.error(f"An error occurred while creating Claim models: {e}")
+        logger.error(f"An error occurred while parsing claim response: {e}")
         return []
