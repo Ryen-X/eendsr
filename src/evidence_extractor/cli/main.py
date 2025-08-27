@@ -63,10 +63,13 @@ def extract(pdf_path: str, output_path: str):
         
         title = gemini_client.query(f"Extract the title of this paper: {text_snippet_metadata[:4000]}")
         if title: extraction_result.title = title.strip()
+        
         pico = extract_pico_elements(gemini_client, text_snippet_metadata)
         if pico: extraction_result.pico_elements = pico
+        
         quality = extract_methods_and_quality(gemini_client, text_snippet_metadata)
         if quality: extraction_result.quality_scores.append(quality)
+        
         figures = extract_figures_and_captions(document, gemini_client)
         if figures: extraction_result.figures = figures
         claim_texts = extract_claim_texts(gemini_client, text_snippet_claims)
