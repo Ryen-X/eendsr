@@ -1,21 +1,144 @@
 {
   "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-  "title": "The title of the paper is: **TYCOV: An Open-Source, Year-Long Behavioral Study of Human Ability to Detect AI-Generated Images**",
+  "title": "The title of the paper is:\n\n**TYCOV: An Open-Source, Year-Long Behavioral Study of Human Ability to Detect AI-Generated Images**",
   "authors": [],
-  "claims": [],
+  "claims": [
+    {
+      "claim_text": "Aggregate accuracy was 60.3%; classconditional accuracies were 67.8% for real images and 52.8% for AI images.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 1,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": null,
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "Participants identify Real images (67.8%) more reliably than AI images (52.8%).",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 4,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": null,
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "cluster-aware participant-level analyses were conducted and confirm the descriptive asymmetry (higher accuracy for Real images than AI images).",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 4,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": null,
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "the overall pattern [of weekly mean accuracy] indicates a modest upward drift.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": -1,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": null,
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "The (AI →Real) off-diagonal cell is larger than the reverse, confirming an authenticity bias where AI images are more often labeled Real than Real images are labeled AI.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 4,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": null,
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "unaided human detection of AI-generated images is modest (60.3%) and asymmetric: observers better detect real images than AI images.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 5,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": null,
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "Human observers alone are only modestly reliable detectors of synthetic imagery and tend to err toward assuming authenticity.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 5,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": null,
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    }
+  ],
   "pico_elements": {
-    "population": "1,217 unique participants who completed forced-choice classifications on a web application.",
-    "intervention": "Detecting AI-generated images within a balanced set of stimuli.",
-    "comparison": "Detecting real photographs within the same balanced set of stimuli.",
-    "outcome": "Detection accuracy, specifically aggregate accuracy, class-conditional accuracies for real vs. AI images, error patterns (confusion matrix), and longitudinal accuracy trends over 55 weeks.",
-    "provenance": []
+    "population": "1,217 unique participants (humans) using a web application.",
+    "intervention": "Performing forced-choice classifications on a balanced set of real and AI-generated images to detect which ones were generated by AI.",
+    "comparison": null,
+    "outcome": "The accuracy of human detection of AI-generated images, measured as aggregate accuracy, class-conditional accuracies (for real vs. AI images), and longitudinal trends in accuracy over 55 weeks.",
+    "provenance": [],
+    "correction_metadata": {
+      "status": "unverified",
+      "reviewer_comment": null,
+      "last_reviewed": null
+    }
   },
   "quality_scores": [
     {
       "score_name": "Methodological Quality",
       "score_value": "Medium",
-      "justification": "The research is a longitudinal observational study, which is a type of cohort study. It collected data from a self-selected cohort of 1,217 participants over a 55-week period to measure their ability to distinguish AI-generated images from real ones. As an observational study without a randomized control group, it fits the description of a Cohort Study, which is assigned a 'Medium' quality score according to the provided rubric.",
-      "provenance": null
+      "justification": "The research is an observational study that collected data from a large cohort of 1,217 participants over a 55-week period. This design prospectively gathers data to measure outcomes and trends in a defined group over time, which is characteristic of a cohort study. It is not a Randomized Controlled Trial as there was no random assignment to an intervention, thus it receives a 'Medium' quality score according to the rubric.",
+      "provenance": null,
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
     }
   ],
   "tables": [],
