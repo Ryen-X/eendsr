@@ -14,6 +14,7 @@ from evidence_extractor.extraction.figures import extract_figures_and_captions
 from evidence_extractor.extraction.claims import extract_claim_texts
 from evidence_extractor.models.schemas import ArticleExtraction, Claim, Provenance
 from evidence_extractor.integration.gemini_client import GeminiClient
+from evidence_extractor.output.json_builder import save_to_json
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +81,6 @@ def extract(pdf_path: str, output_path: str):
                 provenance = Provenance(source_filename=pdf_path, page_number=page_num)
                 claim = Claim(claim_text=text, provenance=provenance)
                 extraction_result.claims.append(claim)
-                logger.info(f"  - Claim (Page {page_num}): {text[:100]}...")
 
     sections = detect_sections(text_with_newlines)
     tables = extract_tables_from_pdf(pdf_path)
@@ -93,9 +93,7 @@ def extract(pdf_path: str, output_path: str):
         extraction_result.bibliography = bib
         body_text = text_with_newlines[:start_idx]
         link_in_text_citations(body_text, extraction_result.bibliography)
-
-    logger.warning("(Note: Output generation not yet implemented.)")
-    
+    save_to_json(extraction_result, output_path)
     document.close()
     logger.info("Processing complete.")
     sys.exit(0)
