@@ -14,9 +14,9 @@
       },
       "uncertainty_annotation": null,
       "correction_metadata": {
-        "status": "unverified",
+        "status": "verified",
         "reviewer_comment": null,
-        "last_reviewed": null
+        "last_reviewed": "2025-10-31T04:56:35.267980"
       }
     },
     {
@@ -30,9 +30,9 @@
       },
       "uncertainty_annotation": null,
       "correction_metadata": {
-        "status": "unverified",
+        "status": "verified",
         "reviewer_comment": null,
-        "last_reviewed": null
+        "last_reviewed": "2025-10-31T04:56:40.997097"
       }
     },
     {
@@ -46,9 +46,9 @@
       },
       "uncertainty_annotation": null,
       "correction_metadata": {
-        "status": "unverified",
+        "status": "verified",
         "reviewer_comment": null,
-        "last_reviewed": null
+        "last_reviewed": "2025-10-31T04:56:43.180315"
       }
     },
     {
@@ -62,9 +62,9 @@
       },
       "uncertainty_annotation": null,
       "correction_metadata": {
-        "status": "unverified",
+        "status": "verified",
         "reviewer_comment": null,
-        "last_reviewed": null
+        "last_reviewed": "2025-10-31T04:56:43.578217"
       }
     },
     {
@@ -78,9 +78,9 @@
       },
       "uncertainty_annotation": null,
       "correction_metadata": {
-        "status": "unverified",
+        "status": "verified",
         "reviewer_comment": null,
-        "last_reviewed": null
+        "last_reviewed": "2025-10-31T04:56:44.245253"
       }
     },
     {
@@ -94,9 +94,9 @@
       },
       "uncertainty_annotation": null,
       "correction_metadata": {
-        "status": "unverified",
+        "status": "verified",
         "reviewer_comment": null,
-        "last_reviewed": null
+        "last_reviewed": "2025-10-31T04:56:45.045969"
       }
     },
     {
@@ -110,9 +110,9 @@
       },
       "uncertainty_annotation": null,
       "correction_metadata": {
-        "status": "unverified",
+        "status": "verified",
         "reviewer_comment": null,
-        "last_reviewed": null
+        "last_reviewed": "2025-10-31T04:56:45.465521"
       }
     }
   ],
@@ -123,9 +123,9 @@
     "outcome": "The accuracy of human detection of AI-generated images, measured as aggregate accuracy, class-conditional accuracies (for real vs. AI images), and longitudinal trends in accuracy over 55 weeks.",
     "provenance": [],
     "correction_metadata": {
-      "status": "unverified",
+      "status": "verified",
       "reviewer_comment": null,
-      "last_reviewed": null
+      "last_reviewed": "2025-10-31T04:56:22.413058"
     }
   },
   "quality_scores": [
