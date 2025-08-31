@@ -1,6 +1,6 @@
 {
   "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-  "title": "The title of the paper is:\n\n**TYCOV: An Open-Source, Year-Long Behavioral Study of Human Ability to Detect AI-Generated Images**",
+  "title": "The title of the paper is: **TYCOV: An Open-Source, Year-Long Behavioral Study of Human Ability to Detect AI-Generated Images**",
   "authors": [],
   "claims": [
     {
@@ -12,11 +12,43 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": null,
+      "uncertainty_annotation": "Confidence: High. Justification: The claim uses definitive language ('was', 'were') to state specific, quantitative results directly from the data.",
       "correction_metadata": {
-        "status": "verified",
+        "status": "unverified",
         "reviewer_comment": null,
-        "last_reviewed": "2025-10-31T04:56:35.267980"
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "Aggregate accuracy: 60.3%.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 3,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": "Confidence: High. Justification: The claim is a direct, unadorned statement of a quantitative fact, which is definitive.",
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "Class-conditional accuracies: preal = 0.678 (67.8%) for ground-truth Real images; pai = 0.528 (52.8%) for ground-truth AI images.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 3,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": "Confidence: High. Justification: The claim presents specific numerical results using equals signs, which is a definitive way of reporting data.",
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
       }
     },
     {
@@ -28,11 +60,11 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": null,
+      "uncertainty_annotation": "Confidence: High. Justification: The claim makes a direct, unqualified comparison ('more reliably than'), which is a definitive statement of the observed outcome.",
       "correction_metadata": {
-        "status": "verified",
+        "status": "unverified",
         "reviewer_comment": null,
-        "last_reviewed": "2025-10-31T04:56:40.997097"
+        "last_reviewed": null
       }
     },
     {
@@ -44,11 +76,11 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": null,
+      "uncertainty_annotation": "Confidence: High. Justification: The claim uses the strong, definitive verb 'confirm' to assert that the analyses validated a specific finding.",
       "correction_metadata": {
-        "status": "verified",
+        "status": "unverified",
         "reviewer_comment": null,
-        "last_reviewed": "2025-10-31T04:56:43.180315"
+        "last_reviewed": null
       }
     },
     {
@@ -60,15 +92,15 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": null,
+      "uncertainty_annotation": "Confidence: Medium. Justification: The claim uses the cautious verb 'indicates' and the softening terms 'modest' and 'drift', suggesting a trend rather than stating a definitive conclusion.",
       "correction_metadata": {
-        "status": "verified",
+        "status": "unverified",
         "reviewer_comment": null,
-        "last_reviewed": "2025-10-31T04:56:43.578217"
+        "last_reviewed": null
       }
     },
     {
-      "claim_text": "The (AI →Real) off-diagonal cell is larger than the reverse, confirming an authenticity bias where AI images are more often labeled Real than Real images are labeled AI.",
+      "claim_text": "AI images are more often labeled Real than Real images are labeled AI.",
       "linked_citations": [],
       "provenance": {
         "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
@@ -76,63 +108,31 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": null,
+      "uncertainty_annotation": "Confidence: High. Justification: The claim makes a direct, unqualified comparison ('more often... than'), stating a factual observation from the data without cautious or speculative language.",
       "correction_metadata": {
-        "status": "verified",
+        "status": "unverified",
         "reviewer_comment": null,
-        "last_reviewed": "2025-10-31T04:56:44.245253"
-      }
-    },
-    {
-      "claim_text": "unaided human detection of AI-generated images is modest (60.3%) and asymmetric: observers better detect real images than AI images.",
-      "linked_citations": [],
-      "provenance": {
-        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-        "page_number": 5,
-        "line_number": null,
-        "bounding_box": null
-      },
-      "uncertainty_annotation": null,
-      "correction_metadata": {
-        "status": "verified",
-        "reviewer_comment": null,
-        "last_reviewed": "2025-10-31T04:56:45.045969"
-      }
-    },
-    {
-      "claim_text": "Human observers alone are only modestly reliable detectors of synthetic imagery and tend to err toward assuming authenticity.",
-      "linked_citations": [],
-      "provenance": {
-        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-        "page_number": 5,
-        "line_number": null,
-        "bounding_box": null
-      },
-      "uncertainty_annotation": null,
-      "correction_metadata": {
-        "status": "verified",
-        "reviewer_comment": null,
-        "last_reviewed": "2025-10-31T04:56:45.465521"
+        "last_reviewed": null
       }
     }
   ],
   "pico_elements": {
-    "population": "1,217 unique participants (humans) using a web application.",
-    "intervention": "Performing forced-choice classifications on a balanced set of real and AI-generated images to detect which ones were generated by AI.",
-    "comparison": null,
-    "outcome": "The accuracy of human detection of AI-generated images, measured as aggregate accuracy, class-conditional accuracies (for real vs. AI images), and longitudinal trends in accuracy over 55 weeks.",
+    "population": "Human participants (1,217 unique participants)",
+    "intervention": "Forced-choice classification of AI-generated images",
+    "comparison": "Forced-choice classification of real photographs",
+    "outcome": "Accuracy in distinguishing AI-generated images from real images (including aggregate accuracy, class-conditional accuracies, and longitudinal trends)",
     "provenance": [],
     "correction_metadata": {
-      "status": "verified",
+      "status": "unverified",
       "reviewer_comment": null,
-      "last_reviewed": "2025-10-31T04:56:22.413058"
+      "last_reviewed": null
     }
   },
   "quality_scores": [
     {
       "score_name": "Methodological Quality",
-      "score_value": "Medium",
-      "justification": "The research is an observational study that collected data from a large cohort of 1,217 participants over a 55-week period. This design prospectively gathers data to measure outcomes and trends in a defined group over time, which is characteristic of a cohort study. It is not a Randomized Controlled Trial as there was no random assignment to an intervention, thus it receives a 'Medium' quality score according to the rubric.",
+      "score_value": "Low",
+      "justification": "The study is an observational, cross-sectional study. It collected data from a self-selected group of 1,217 participants through a public web application to measure their ability to detect AI-generated images. This design assesses performance at a specific point in time for each participant. It is not a Randomized Controlled Trial, Cohort Study, or Case-Control Study, as it lacks randomization, intervention, or longitudinal follow-up of a defined group to establish causality. According to the provided rubric, a Cross-Sectional Study is assigned a 'Low' quality score.",
       "provenance": null,
       "correction_metadata": {
         "status": "unverified",
