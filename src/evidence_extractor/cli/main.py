@@ -20,6 +20,7 @@ from evidence_extractor.models.schemas import ArticleExtraction, Claim, Provenan
 from evidence_extractor.integration.gemini_client import GeminiClient
 from evidence_extractor.output.json_builder import save_to_json
 from evidence_extractor.output.spreadsheet import export_to_excel
+from evidence_extractor.output.prisma import generate_prisma_text_report, save_prisma_report
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,6 @@ def cli():
 def extract(pdf_path: str, output_path: str):
     logger.info("--- Evidence Extractor ---")
     logger.info(f"Received request to process PDF: {pdf_path}")
-    
     extraction_result = ArticleExtraction(source_filename=pdf_path)
     gemini_client = GeminiClient()
     if not gemini_client.is_configured(): logger.warning("Gemini client not configured.")
@@ -49,23 +49,17 @@ def extract(pdf_path: str, output_path: str):
     pages_text = extract_text_from_doc(document)
     text_with_newlines, cleaned_text = clean_and_consolidate_text(pages_text)
     if not cleaned_text: document.close(); sys.exit(1)
-
     if gemini_client.is_configured():
         text_snippet_metadata = cleaned_text[:8000]
         text_snippet_claims = cleaned_text[:16000]
-        
         title = gemini_client.query(f"Extract the title of this paper: {text_snippet_metadata[:4000]}")
         if title: extraction_result.title = title.strip()
-        
         pico = extract_pico_elements(gemini_client, text_snippet_metadata)
         if pico: extraction_result.pico_elements = pico
-        
         quality = extract_methods_and_quality(gemini_client, text_snippet_metadata)
         if quality: extraction_result.quality_scores.append(quality)
-        
         figures = extract_figures_and_captions(document, gemini_client)
         if figures: extraction_result.figures = figures
-            
         claim_texts = extract_claim_texts(gemini_client, text_snippet_claims)
         if claim_texts:
             temp_claims = []
@@ -74,7 +68,6 @@ def extract(pdf_path: str, output_path: str):
                 provenance = Provenance(source_filename=pdf_path, page_number=page_num)
                 claim = Claim(claim_text=text, provenance=provenance)
                 temp_claims.append(claim)
-            
             annotate_claims_in_batch(gemini_client, temp_claims)
             extraction_result.claims = temp_claims
             summary = generate_summary(gemini_client, extraction_result.claims)
@@ -95,6 +88,7 @@ def extract(pdf_path: str, output_path: str):
     document.close()
     logger.info("Processing complete.")
     sys.exit(0)
+
 @cli.command()
 @click.argument("json_path", type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 def review(json_path: str):
@@ -143,14 +137,21 @@ def review(json_path: str):
     "--output", "output_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True),
     required=True, help="The path to save the output .xlsx spreadsheet.",
 )
-def export(json_path: str, output_path: str):
+@click.option(
+    "--prisma", "prisma_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True),
+    help="Optional path to save a PRISMA-style text report.",
+)
+def export(json_path: str, output_path: str, prisma_path: str):
     logger.info(f"Loading '{json_path}' for export.")
     try:
-        with open(json_path, 'r', encoding='utf-8') as f: data = json.load(f)
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
         extraction = ArticleExtraction(**data)
     except Exception as e:
         logger.error(f"Failed to load or parse JSON file: {e}"); sys.exit(1)
     export_to_excel(extraction, output_path)
-
+    if prisma_path:
+        report_content = generate_prisma_text_report(extraction)
+        save_prisma_report(report_content, prisma_path)
 if __name__ == "__main__":
     cli()
