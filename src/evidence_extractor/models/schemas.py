@@ -86,6 +86,8 @@ class ArticleExtraction(BaseModel):
     source_filename: str
     title: Optional[str] = None
     authors: List[str] = Field(default_factory=list)
+    summary: Optional[str] = Field(None, description="A generated summary of the key findings.")
+    
     claims: List[Claim] = Field(default_factory=list)
     pico_elements: Optional[PICO] = None
     quality_scores: List[QualityScore] = Field(default_factory=list)

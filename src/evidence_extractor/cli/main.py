@@ -15,6 +15,7 @@ from evidence_extractor.extraction.methods import extract_methods_and_quality
 from evidence_extractor.extraction.figures import extract_figures_and_captions
 from evidence_extractor.extraction.claims import extract_claim_texts
 from evidence_extractor.extraction.uncertainty import annotate_claims_in_batch
+from evidence_extractor.extraction.summarization import generate_summary
 from evidence_extractor.models.schemas import ArticleExtraction, Claim, Provenance, ValidationStatus
 from evidence_extractor.integration.gemini_client import GeminiClient
 from evidence_extractor.output.json_builder import save_to_json
@@ -67,21 +68,22 @@ def extract(pdf_path: str, output_path: str):
             
         claim_texts = extract_claim_texts(gemini_client, text_snippet_claims)
         if claim_texts:
-            logger.info("Structuring claims and finding provenance...")
             temp_claims = []
             for text in claim_texts:
                 page_num = find_claim_provenance(text, pages_text)
                 provenance = Provenance(source_filename=pdf_path, page_number=page_num)
                 claim = Claim(claim_text=text, provenance=provenance)
                 temp_claims.append(claim)
-                logger.info(f"  - Found Claim (Page {page_num}): {text[:100]}...")
+            
             annotate_claims_in_batch(gemini_client, temp_claims)
             extraction_result.claims = temp_claims
-
+            summary = generate_summary(gemini_client, extraction_result.claims)
+            if summary:
+                extraction_result.summary = summary
+                logger.info(f"--- Generated Summary ---\n{summary}\n-----------------------")
     sections = detect_sections(text_with_newlines)
     tables = extract_tables_from_pdf(pdf_path)
     if tables: extraction_result.tables = tables
-
     refs_tuple = find_references_section(text_with_newlines)
     if refs_tuple:
         refs_text, start_idx = refs_tuple
@@ -89,13 +91,10 @@ def extract(pdf_path: str, output_path: str):
         extraction_result.bibliography = bib
         body_text = text_with_newlines[:start_idx]
         link_in_text_citations(body_text, extraction_result.bibliography)
-
     save_to_json(extraction_result, output_path)
-    
     document.close()
     logger.info("Processing complete.")
     sys.exit(0)
-
 @cli.command()
 @click.argument("json_path", type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 def review(json_path: str):
@@ -152,5 +151,6 @@ def export(json_path: str, output_path: str):
     except Exception as e:
         logger.error(f"Failed to load or parse JSON file: {e}"); sys.exit(1)
     export_to_excel(extraction, output_path)
+
 if __name__ == "__main__":
     cli()

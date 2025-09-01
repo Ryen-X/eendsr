@@ -1,7 +1,8 @@
 {
   "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-  "title": "The title of the paper is: **TYCOV: An Open-Source, Year-Long Behavioral Study of Human Ability to Detect AI-Generated Images**",
+  "title": "Based on the text provided, the title of the paper is:\n\n**TYCOV: An Open-Source, Year-Long Behavioral Study of Human Ability to Detect AI-Generated Images**",
   "authors": [],
+  "summary": "Unaided human detection of AI-generated images is only modestly reliable, achieving an aggregate accuracy of 60.3%. This overall performance is asymmetric: participants identified real images with greater reliability (67.8% accuracy) than they did AI-generated ones (52.8% accuracy). This disparity reveals a significant authenticity bias, as observers are more likely to misclassify an AI image as real than the reverse, tending to err toward assuming an image is authentic.",
   "claims": [
     {
       "claim_text": "Aggregate accuracy was 60.3%; classconditional accuracies were 67.8% for real images and 52.8% for AI images.",
@@ -12,7 +13,23 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim uses definitive language ('was', 'were') to state specific, quantitative results directly from the data.",
+      "uncertainty_annotation": "Confidence: High. Justification: The claim presents specific quantitative results ('was 60.3%') as direct, factual statements without any hedging.",
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "Total trial-level responses: N = 60,123 (from n = 1,217 unique participants; mean ≈49.4 trials per participant).",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 3,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": "Confidence: High. Justification: This is a descriptive statement of the study's methodology and dataset size, presenting exact numbers as facts.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -28,7 +45,7 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim is a direct, unadorned statement of a quantitative fact, which is definitive.",
+      "uncertainty_annotation": "Confidence: High. Justification: The claim is a direct statement of a specific numerical result, presented as a fact.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -44,7 +61,7 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim presents specific numerical results using equals signs, which is a definitive way of reporting data.",
+      "uncertainty_annotation": "Confidence: High. Justification: This claim reports specific quantitative findings with precise values, using definitive and factual language.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -60,7 +77,7 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim makes a direct, unqualified comparison ('more reliably than'), which is a definitive statement of the observed outcome.",
+      "uncertainty_annotation": "Confidence: High. Justification: The claim makes a direct comparative statement ('more reliably than') based on numerical evidence, framing it as a firm observation.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -76,7 +93,7 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim uses the strong, definitive verb 'confirm' to assert that the analyses validated a specific finding.",
+      "uncertainty_annotation": "Confidence: High. Justification: The use of the verb 'confirm' indicates a definitive conclusion drawn from the analysis, showing high certainty.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -84,23 +101,7 @@
       }
     },
     {
-      "claim_text": "the overall pattern [of weekly mean accuracy] indicates a modest upward drift.",
-      "linked_citations": [],
-      "provenance": {
-        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-        "page_number": -1,
-        "line_number": null,
-        "bounding_box": null
-      },
-      "uncertainty_annotation": "Confidence: Medium. Justification: The claim uses the cautious verb 'indicates' and the softening terms 'modest' and 'drift', suggesting a trend rather than stating a definitive conclusion.",
-      "correction_metadata": {
-        "status": "unverified",
-        "reviewer_comment": null,
-        "last_reviewed": null
-      }
-    },
-    {
-      "claim_text": "AI images are more often labeled Real than Real images are labeled AI.",
+      "claim_text": "the overall pattern indicates a modest upward drift.",
       "linked_citations": [],
       "provenance": {
         "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
@@ -108,7 +109,55 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim makes a direct, unqualified comparison ('more often... than'), stating a factual observation from the data without cautious or speculative language.",
+      "uncertainty_annotation": "Confidence: Medium. Justification: The verb 'indicates' is cautious language that suggests a trend rather than stating it as a proven fact.",
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "The (AI →Real) off-diagonal cell is larger than the reverse, confirming an authenticity bias where AI images are more often labeled Real than Real images are labeled AI.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 4,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": "Confidence: High. Justification: The claim uses the strong verb 'confirming' to assert a direct causal link between an observation and a conclusion (authenticity bias).",
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "unaided human detection of AI-generated images is modest (60.3%) and asymmetric: observers better detect real images than AI images.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 5,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": "Confidence: High. Justification: This claim summarizes findings using definitive declarative statements ('is modest and asymmetric') and direct comparisons ('better detect').",
+      "correction_metadata": {
+        "status": "unverified",
+        "reviewer_comment": null,
+        "last_reviewed": null
+      }
+    },
+    {
+      "claim_text": "Human observers alone are only modestly reliable detectors of synthetic imagery and tend to err toward assuming authenticity.",
+      "linked_citations": [],
+      "provenance": {
+        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
+        "page_number": 5,
+        "line_number": null,
+        "bounding_box": null
+      },
+      "uncertainty_annotation": "Confidence: Medium. Justification: The phrase 'tend to err' suggests a general inclination or pattern rather than a constant or proven rule, which is characteristic of cautious language.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -117,10 +166,10 @@
     }
   ],
   "pico_elements": {
-    "population": "Human participants (1,217 unique participants)",
-    "intervention": "Forced-choice classification of AI-generated images",
-    "comparison": "Forced-choice classification of real photographs",
-    "outcome": "Accuracy in distinguishing AI-generated images from real images (including aggregate accuracy, class-conditional accuracies, and longitudinal trends)",
+    "population": "1,217 unique participants of a public web application who performed a visual classification task.",
+    "intervention": "Forced-choice classification of images, determining whether each image was real or AI-generated.",
+    "comparison": null,
+    "outcome": "The accuracy of human detection of AI-generated versus real images, including aggregate accuracy, class-conditional accuracies, and longitudinal trends in accuracy over 55 weeks.",
     "provenance": [],
     "correction_metadata": {
       "status": "unverified",
@@ -132,7 +181,7 @@
     {
       "score_name": "Methodological Quality",
       "score_value": "Low",
-      "justification": "The study is an observational, cross-sectional study. It collected data from a self-selected group of 1,217 participants through a public web application to measure their ability to detect AI-generated images. This design assesses performance at a specific point in time for each participant. It is not a Randomized Controlled Trial, Cohort Study, or Case-Control Study, as it lacks randomization, intervention, or longitudinal follow-up of a defined group to establish causality. According to the provided rubric, a Cross-Sectional Study is assigned a 'Low' quality score.",
+      "justification": "The study is an observational behavioral study where data was collected from a self-selected, non-randomized group of participants via a public web application. This design most closely resembles a cross-sectional study, as it measures the ability of a sample population over a period without a controlled intervention or a defined cohort being followed over time. According to the provided rubric, a cross-sectional study is assigned a 'Low' quality score.",
       "provenance": null,
       "correction_metadata": {
         "status": "unverified",
