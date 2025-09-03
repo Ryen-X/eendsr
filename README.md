@@ -11,13 +11,30 @@ This is not a generic "PaperGPT"; it is designed to be tuned to a specific domai
 ### Core Features (Planned)
 
 *   PDF ingestion and citation parsing.
-*   Extraction of structured claims, PICO fields, and quality scores.
-*   Table and figure extraction.
-*   Detailed provenance linking claims to their source (page/line).
-*   Human-in-the-loop correction workflow.
-*   Export to structured formats (JSON, CSV) and machine-readable PRISMA artifacts.
+*   Extraction of structured claims, PICO fields, and quality scores using Google's Gemini models.
+*   Table and figure extraction with caption analysis.
+*   Detailed provenance linking claims to their source page.
+*   Human-in-the-loop review and validation workflow.
+*   Export to structured formats (JSON, XLSX) and machine-readable PRISMA artifacts (text reports and diagrams).
 
 ## Installation
+
+### System Dependencies
+
+This tool requires the **Graphviz** visualization software to generate PRISMA flow diagrams. Please install it before installing the Python package.
+
+*   **macOS (using Homebrew):**
+    ```bash
+    brew install graphviz
+    ```
+*   **Linux (Debian/Ubuntu):**
+    ```bash
+    sudo apt-get update && sudo apt-get install -y graphviz
+    ```
+*   **Windows:**
+    Download and run the installer from the [official Graphviz website](https://graphviz.org/download/). Ensure the `bin` directory is added to your system's PATH.
+
+### Python Package
 
 _Instructions to be added in a future phase._
 
@@ -25,14 +42,16 @@ _Instructions to be added in a future phase._
 pip install evidence-extractor
 ```
 
-### Usage
+## Usage
 A basic CLI usage example will be added here.
 code
-```bash
+Bash
 evidence-extractor extract --pdf path/to/paper.pdf --output results.json
-```
 
-### Contributing
+## Contributing
+
 Contributions are welcome! Please see our contributing guidelines for more details.
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

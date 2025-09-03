@@ -10,83 +10,60 @@ class ValidationStatus(str, Enum):
     EDITED = "edited"
 
 class CorrectionMetadata(BaseModel):
-    status: ValidationStatus = Field(
-        default=ValidationStatus.UNVERIFIED,
-        description="The validation status of this item, set by a human reviewer."
-    )
-    reviewer_comment: Optional[str] = Field(
-        None,
-        description="A comment or note from the human reviewer."
-    )
-    last_reviewed: Optional[datetime] = Field(
-        None,
-        description="The timestamp of the last human review."
-    )
+    status: ValidationStatus = Field(default=ValidationStatus.UNVERIFIED)
+    reviewer_comment: Optional[str] = Field(None)
+    last_reviewed: Optional[datetime] = Field(None)
 
 class Provenance(BaseModel):
-    source_filename: str = Field(..., description="The name of the source PDF file.")
-    page_number: int = Field(..., description="The page number where the information was found.")
-    line_number: Optional[int] = Field(None, description="An approximate line number on the page.")
-    bounding_box: Optional[List[float]] = Field(
-        None,
-        description="A list of coordinates [x0, y0, x1, y1] defining the object's location."
-    )
+    source_filename: str = Field(...)
+    page_number: int = Field(...)
+    line_number: Optional[int] = Field(None)
+    bounding_box: Optional[List[float]] = Field(None)
 
 class PICO(BaseModel):
-    population: Optional[str] = Field(None, description="The characteristics of the study population.")
-    intervention: Optional[str] = Field(None, description="The intervention or treatment being studied.")
-    comparison: Optional[str] = Field(None, description="The control or comparison group.")
-    outcome: Optional[str] = Field(None, description="The outcomes measured in the study.")
-    provenance: List[Provenance] = Field(
-        default_factory=list,
-        description="List of sources for the PICO elements."
-    )
+    population: Optional[str] = Field(None)
+    intervention: Optional[str] = Field(None)
+    comparison: Optional[str] = Field(None)
+    outcome: Optional[str] = Field(None)
+    provenance: List[Provenance] = Field(default_factory=list)
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
 class QualityScore(BaseModel):
-    score_name: str = Field(..., description="The name of the quality scoring system (e.g., 'Jadad', 'RoB 2').")
-    score_value: str = Field(..., description="The calculated score or rating.")
-    justification: Optional[str] = Field(None, description="The justification or evidence for the assigned score.")
-    provenance: Optional[Provenance] = Field(None, description="The source of the quality score information, if applicable.")
+    score_name: str = Field(...)
+    score_value: str = Field(...)
+    justification: Optional[str] = Field(None)
+    provenance: Optional[Provenance] = Field(None)
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
 class Claim(BaseModel):
-    claim_text: str = Field(..., description="The verbatim text of the extracted claim.")
-    linked_citations: List[str] = Field(
-        default_factory=list,
-        description="A list of citation keys (e.g., 'Author2023') linked to this claim."
-    )
+    claim_text: str = Field(...)
+    linked_citations: List[str] = Field(default_factory=list)
     provenance: Provenance
-    uncertainty_annotation: Optional[str] = Field(
-        None,
-        description="A human-readable annotation about the confidence in this claim."
-    )
+    uncertainty_annotation: Optional[str] = Field(None)
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
 class ExtractedTable(BaseModel):
-    caption: Optional[str] = Field(None, description="The caption of the table.")
-    table_data: List[List[str]] = Field(
-        ...,
-        description="The table content, represented as a list of rows, where each row is a list of strings."
-    )
+    caption: Optional[str] = Field(None)
+    table_data: List[List[str]] = Field(...)
     provenance: Provenance
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
 class ExtractedFigure(BaseModel):
-    caption: str = Field(..., description="The caption of the figure.")
-    figure_type: str = Field(..., description="The type of figure (e.g., 'Graph', 'Diagram', 'Image').")
+    caption: str = Field(...)
+    figure_type: str = Field(...)
     provenance: Provenance
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
 class BibliographyItem(BaseModel):
-    citation_key: str = Field(..., description="A unique key for the citation, e.g., 'Smith2021'.")
-    full_citation: str = Field(..., description="The full, raw text of the bibliographic entry.")
+    citation_key: str = Field(...)
+    full_citation: str = Field(...)
 
 class ArticleExtraction(BaseModel):
     source_filename: str
     title: Optional[str] = None
     authors: List[str] = Field(default_factory=list)
-    summary: Optional[str] = Field(None, description="A generated summary of the key findings.")
+    summary: Optional[str] = Field(None)
+    records_excluded_count: int = Field(default=0, description="Number of records excluded during screening.")
     
     claims: List[Claim] = Field(default_factory=list)
     pico_elements: Optional[PICO] = None

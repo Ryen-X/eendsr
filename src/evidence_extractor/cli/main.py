@@ -21,6 +21,7 @@ from evidence_extractor.integration.gemini_client import GeminiClient
 from evidence_extractor.output.json_builder import save_to_json
 from evidence_extractor.output.spreadsheet import export_to_excel
 from evidence_extractor.output.prisma import generate_prisma_text_report, save_prisma_report
+from evidence_extractor.output.prisma_diagram import generate_prisma_diagram
 
 logger = logging.getLogger(__name__)
 
@@ -141,11 +142,14 @@ def review(json_path: str):
     "--prisma", "prisma_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True),
     help="Optional path to save a PRISMA-style text report.",
 )
-def export(json_path: str, output_path: str, prisma_path: str):
+@click.option(
+    "--prisma-diagram", "prisma_diagram_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True),
+    help="Optional path to save a PRISMA flow diagram image (e.g., 'diagram'). Extension is added automatically.",
+)
+def export(json_path: str, output_path: str, prisma_path: str, prisma_diagram_path: str):
     logger.info(f"Loading '{json_path}' for export.")
     try:
-        with open(json_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        with open(json_path, 'r', encoding='utf-8') as f: data = json.load(f)
         extraction = ArticleExtraction(**data)
     except Exception as e:
         logger.error(f"Failed to load or parse JSON file: {e}"); sys.exit(1)
@@ -153,5 +157,7 @@ def export(json_path: str, output_path: str, prisma_path: str):
     if prisma_path:
         report_content = generate_prisma_text_report(extraction)
         save_prisma_report(report_content, prisma_path)
+    if prisma_diagram_path:
+        generate_prisma_diagram(extraction, prisma_diagram_path)
 if __name__ == "__main__":
     cli()
