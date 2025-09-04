@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from datetime import datetime
 from enum import Enum
@@ -43,8 +43,11 @@ class Claim(BaseModel):
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
 class ExtractedTable(BaseModel):
-    caption: Optional[str] = Field(None)
-    table_data: List[List[str]] = Field(...)
+    summary: Optional[str] = Field(None, description="An AI-generated summary of the table's main finding.")
+    table_data: List[Dict[str, Any]] = Field(
+        ...,
+        description="The table content, represented as a list of rows, where each row is a dictionary."
+    )
     provenance: Provenance
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
@@ -63,8 +66,7 @@ class ArticleExtraction(BaseModel):
     title: Optional[str] = None
     authors: List[str] = Field(default_factory=list)
     summary: Optional[str] = Field(None)
-    records_excluded_count: int = Field(default=0, description="Number of records excluded during screening.")
-    
+    records_excluded_count: int = Field(default=0)
     claims: List[Claim] = Field(default_factory=list)
     pico_elements: Optional[PICO] = None
     quality_scores: List[QualityScore] = Field(default_factory=list)

@@ -9,14 +9,12 @@ from evidence_extractor.core.preprocess import extract_text_from_doc, clean_and_
 from evidence_extractor.core.provenance import find_claim_provenance
 from evidence_extractor.extraction.citations import find_references_section, parse_bibliography, link_in_text_citations
 from evidence_extractor.extraction.structure import detect_sections
-from evidence_extractor.extraction.tables import extract_tables_from_pdf
-from evidence_extractor.extraction.pico import extract_pico_elements
-from evidence_extractor.extraction.methods import extract_methods_and_quality
+from evidence_extractor.extraction.tables import extract_tables_with_llm
 from evidence_extractor.extraction.figures import extract_figures_and_captions
-from evidence_extractor.extraction.claims import extract_claim_texts
 from evidence_extractor.extraction.uncertainty import annotate_claims_in_batch
 from evidence_extractor.extraction.summarization import generate_summary
-from evidence_extractor.models.schemas import ArticleExtraction, Claim, Provenance, ValidationStatus
+from evidence_extractor.extraction.llm_orchestrator import orchestrate_llm_extraction
+from evidence_extractor.models.schemas import ArticleExtraction, Claim, Provenance, PICO, QualityScore
 from evidence_extractor.integration.gemini_client import GeminiClient
 from evidence_extractor.output.json_builder import save_to_json
 from evidence_extractor.output.spreadsheet import export_to_excel
@@ -42,6 +40,7 @@ def cli():
 def extract(pdf_path: str, output_path: str):
     logger.info("--- Evidence Extractor ---")
     logger.info(f"Received request to process PDF: {pdf_path}")
+    
     extraction_result = ArticleExtraction(source_filename=pdf_path)
     gemini_client = GeminiClient()
     if not gemini_client.is_configured(): logger.warning("Gemini client not configured.")
@@ -50,34 +49,45 @@ def extract(pdf_path: str, output_path: str):
     pages_text = extract_text_from_doc(document)
     text_with_newlines, cleaned_text = clean_and_consolidate_text(pages_text)
     if not cleaned_text: document.close(); sys.exit(1)
+
     if gemini_client.is_configured():
-        text_snippet_metadata = cleaned_text[:8000]
-        text_snippet_claims = cleaned_text[:16000]
-        title = gemini_client.query(f"Extract the title of this paper: {text_snippet_metadata[:4000]}")
-        if title: extraction_result.title = title.strip()
-        pico = extract_pico_elements(gemini_client, text_snippet_metadata)
-        if pico: extraction_result.pico_elements = pico
-        quality = extract_methods_and_quality(gemini_client, text_snippet_metadata)
-        if quality: extraction_result.quality_scores.append(quality)
+        llm_payload = orchestrate_llm_extraction(gemini_client, cleaned_text[:16000])
+        
+        if llm_payload:
+            if llm_payload.get("pico"):
+                extraction_result.pico_elements = PICO(**llm_payload["pico"])
+            if llm_payload.get("quality"):
+                extraction_result.quality_scores.append(QualityScore(**llm_payload["quality"]))
+            
+            claim_data = llm_payload.get("claims", [])
+            if claim_data:
+                temp_claims = []
+                for item in claim_data:
+                    text = item.get("claim_text")
+                    if text:
+                        page_num = find_claim_provenance(text, pages_text)
+                        provenance = Provenance(source_filename=pdf_path, page_number=page_num)
+                        claim = Claim(claim_text=text, provenance=provenance)
+                        temp_claims.append(claim)
+                
+                annotate_claims_in_batch(gemini_client, temp_claims)
+                extraction_result.claims = temp_claims
+                summary = generate_summary(gemini_client, extraction_result.claims)
+                if summary:
+                    extraction_result.summary = summary
+                    logger.info(f"--- Generated Summary ---\n{summary}\n-----------------------")
+
         figures = extract_figures_and_captions(document, gemini_client)
         if figures: extraction_result.figures = figures
-        claim_texts = extract_claim_texts(gemini_client, text_snippet_claims)
-        if claim_texts:
-            temp_claims = []
-            for text in claim_texts:
-                page_num = find_claim_provenance(text, pages_text)
-                provenance = Provenance(source_filename=pdf_path, page_number=page_num)
-                claim = Claim(claim_text=text, provenance=provenance)
-                temp_claims.append(claim)
-            annotate_claims_in_batch(gemini_client, temp_claims)
-            extraction_result.claims = temp_claims
-            summary = generate_summary(gemini_client, extraction_result.claims)
-            if summary:
-                extraction_result.summary = summary
-                logger.info(f"--- Generated Summary ---\n{summary}\n-----------------------")
+
     sections = detect_sections(text_with_newlines)
-    tables = extract_tables_from_pdf(pdf_path)
-    if tables: extraction_result.tables = tables
+    
+    if gemini_client.is_configured():
+        tables = extract_tables_with_llm(document, gemini_client)
+        if tables: extraction_result.tables = tables
+    else:
+        logger.warning("Skipping advanced table extraction as Gemini client is not configured.")
+
     refs_tuple = find_references_section(text_with_newlines)
     if refs_tuple:
         refs_text, start_idx = refs_tuple
@@ -85,7 +95,9 @@ def extract(pdf_path: str, output_path: str):
         extraction_result.bibliography = bib
         body_text = text_with_newlines[:start_idx]
         link_in_text_citations(body_text, extraction_result.bibliography)
+
     save_to_json(extraction_result, output_path)
+    
     document.close()
     logger.info("Processing complete.")
     sys.exit(0)
@@ -159,5 +171,6 @@ def export(json_path: str, output_path: str, prisma_path: str, prisma_diagram_pa
         save_prisma_report(report_content, prisma_path)
     if prisma_diagram_path:
         generate_prisma_diagram(extraction, prisma_diagram_path)
+
 if __name__ == "__main__":
     cli()
