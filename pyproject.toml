@@ -44,4 +44,5 @@ evidence-extractor = "evidence_extractor.cli.main:cli"
 [project.optional-dependencies]
 test = [
     "pytest>=7.0",
+    "pytest-mock>=3.12.0",
 ]
