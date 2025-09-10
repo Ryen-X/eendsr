@@ -46,3 +46,8 @@ test = [
     "pytest>=7.0",
     "pytest-mock>=3.12.0",
 ]
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks tests as integration tests (slow, may require network)",
+]
