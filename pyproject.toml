@@ -50,6 +50,10 @@ notebook = [
     "jupyter>=1.0.0",
 ]
 
+docs = [
+    "sphinx>=7.0.0",
+    "furo>=2023.09.10",
+]
 
 [tool.pytest.ini_options]
 markers = [
