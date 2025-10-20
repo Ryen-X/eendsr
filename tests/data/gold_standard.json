@@ -1,0 +1,14 @@
+{
+  "source_filename": "test_document.pdf",
+  "claims": [
+    {
+      "claim_text": "This is the first page."
+    },
+    {
+      "claim_text": "It contains some simple text for extraction."
+    },
+    {
+      "claim_text": "This is the second page, with a hyphenated word."
+    }
+  ]
+}

@@ -14,12 +14,13 @@ from evidence_extractor.extraction.figures import extract_figures_and_captions
 from evidence_extractor.extraction.uncertainty import annotate_claims_in_batch
 from evidence_extractor.extraction.summarization import generate_summary
 from evidence_extractor.extraction.llm_orchestrator import orchestrate_llm_extraction
-from evidence_extractor.models.schemas import ArticleExtraction, Claim, Provenance, PICO, QualityScore
+from evidence_extractor.models.schemas import ArticleExtraction, Claim, Provenance, PICO, QualityScore, ValidationStatus
 from evidence_extractor.integration.gemini_client import GeminiClient
 from evidence_extractor.output.json_builder import save_to_json
 from evidence_extractor.output.spreadsheet import export_to_excel
 from evidence_extractor.output.prisma import generate_prisma_text_report, save_prisma_report
 from evidence_extractor.output.prisma_diagram import generate_prisma_diagram
+from evidence_extractor.evaluation.metrics import calculate_claim_metrics
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,6 @@ def cli():
 def extract(pdf_path: str, output_path: str):
     logger.info("--- Evidence Extractor ---")
     logger.info(f"Received request to process PDF: {pdf_path}")
-    
     extraction_result = ArticleExtraction(source_filename=pdf_path)
     gemini_client = GeminiClient()
     if not gemini_client.is_configured(): logger.warning("Gemini client not configured.")
@@ -49,16 +49,11 @@ def extract(pdf_path: str, output_path: str):
     pages_text = extract_text_from_doc(document)
     text_with_newlines, cleaned_text = clean_and_consolidate_text(pages_text)
     if not cleaned_text: document.close(); sys.exit(1)
-
     if gemini_client.is_configured():
         llm_payload = orchestrate_llm_extraction(gemini_client, cleaned_text[:16000])
-        
         if llm_payload:
-            if llm_payload.get("pico"):
-                extraction_result.pico_elements = PICO(**llm_payload["pico"])
-            if llm_payload.get("quality"):
-                extraction_result.quality_scores.append(QualityScore(**llm_payload["quality"]))
-            
+            if llm_payload.get("pico"): extraction_result.pico_elements = PICO(**llm_payload["pico"])
+            if llm_payload.get("quality"): extraction_result.quality_scores.append(QualityScore(**llm_payload["quality"]))
             claim_data = llm_payload.get("claims", [])
             if claim_data:
                 temp_claims = []
@@ -69,25 +64,20 @@ def extract(pdf_path: str, output_path: str):
                         provenance = Provenance(source_filename=pdf_path, page_number=page_num)
                         claim = Claim(claim_text=text, provenance=provenance)
                         temp_claims.append(claim)
-                
                 annotate_claims_in_batch(gemini_client, temp_claims)
                 extraction_result.claims = temp_claims
                 summary = generate_summary(gemini_client, extraction_result.claims)
                 if summary:
                     extraction_result.summary = summary
                     logger.info(f"--- Generated Summary ---\n{summary}\n-----------------------")
-
         figures = extract_figures_and_captions(document, gemini_client)
         if figures: extraction_result.figures = figures
-
     sections = detect_sections(text_with_newlines)
-    
     if gemini_client.is_configured():
         tables = extract_tables_with_llm(document, gemini_client)
         if tables: extraction_result.tables = tables
     else:
         logger.warning("Skipping advanced table extraction as Gemini client is not configured.")
-
     refs_tuple = find_references_section(text_with_newlines)
     if refs_tuple:
         refs_text, start_idx = refs_tuple
@@ -95,9 +85,7 @@ def extract(pdf_path: str, output_path: str):
         extraction_result.bibliography = bib
         body_text = text_with_newlines[:start_idx]
         link_in_text_citations(body_text, extraction_result.bibliography)
-
     save_to_json(extraction_result, output_path)
-    
     document.close()
     logger.info("Processing complete.")
     sys.exit(0)
@@ -146,18 +134,9 @@ def review(json_path: str):
 
 @cli.command()
 @click.argument("json_path", type=click.Path(exists=True, dir_okay=False, resolve_path=True))
-@click.option(
-    "--output", "output_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True),
-    required=True, help="The path to save the output .xlsx spreadsheet.",
-)
-@click.option(
-    "--prisma", "prisma_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True),
-    help="Optional path to save a PRISMA-style text report.",
-)
-@click.option(
-    "--prisma-diagram", "prisma_diagram_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True),
-    help="Optional path to save a PRISMA flow diagram image (e.g., 'diagram'). Extension is added automatically.",
-)
+@click.option("--output", "output_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True), required=True)
+@click.option("--prisma", "prisma_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True))
+@click.option("--prisma-diagram", "prisma_diagram_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True))
 def export(json_path: str, output_path: str, prisma_path: str, prisma_diagram_path: str):
     logger.info(f"Loading '{json_path}' for export.")
     try:
@@ -171,6 +150,41 @@ def export(json_path: str, output_path: str, prisma_path: str, prisma_diagram_pa
         save_prisma_report(report_content, prisma_path)
     if prisma_diagram_path:
         generate_prisma_diagram(extraction, prisma_diagram_path)
+
+@cli.command()
+@click.option("--pdf", "pdf_path", type=click.Path(exists=True, dir_okay=False, resolve_path=True), required=True)
+@click.option("--gold-standard", "gold_standard_path", type=click.Path(exists=True, dir_okay=False, resolve_path=True), required=True)
+def evaluate(pdf_path: str, gold_standard_path: str):
+    logger.info("--- Performance Evaluation Mode ---")
+    try:
+        with open(gold_standard_path, 'r') as f:
+            gold_data = json.load(f)
+        gold_claims = [item['claim_text'] for item in gold_data.get('claims', [])]
+        logger.info(f"Loaded {len(gold_claims)} claims from gold standard file.")
+    except Exception as e:
+        logger.error(f"Failed to load or parse gold standard file: {e}"); sys.exit(1)
+    gemini_client = GeminiClient()
+    if not gemini_client.is_configured():
+        logger.error("Cannot run evaluation; Gemini client not configured."); sys.exit(1)
+    document = ingest_pdf(pdf_path)
+    if not document: sys.exit(1)
+    pages_text = extract_text_from_doc(document)
+    _, cleaned_text = clean_and_consolidate_text(pages_text)
+    llm_payload = orchestrate_llm_extraction(gemini_client, cleaned_text[:16000])
+    extracted_claims_text = []
+    if llm_payload and llm_payload.get("claims"):
+        extracted_claims_text = [item.get("claim_text", "") for item in llm_payload["claims"] if item.get("claim_text")]
+    logger.info(f"Extraction pipeline generated {len(extracted_claims_text)} claims.")
+    metrics = calculate_claim_metrics(extracted_claims_text, gold_claims)
+    click.echo("\n--- Claim Extraction Performance ---")
+    click.secho(f"  Precision: {metrics['precision']:.2f}", fg="yellow")
+    click.secho(f"  Recall:    {metrics['recall']:.2f}", fg="yellow")
+    click.secho(f"  F1-Score:  {metrics['f1_score']:.2f}", fg="yellow")
+    click.echo("  ----------------------------------")
+    click.echo(f"  True Positives:  {metrics['true_positives']}")
+    click.echo(f"  False Positives: {metrics['false_positives']}")
+    click.echo(f"  False Negatives: {metrics['false_negatives']}")
+    click.echo("------------------------------------")
 
 if __name__ == "__main__":
     cli()
