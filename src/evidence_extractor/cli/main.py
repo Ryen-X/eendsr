@@ -30,16 +30,10 @@ def cli():
     setup_logging()
 
 @cli.command()
-@click.option(
-    "--pdf", "pdf_path", type=click.Path(exists=True, dir_okay=False, resolve_path=True),
-    required=True, help="The path to the PDF file to be processed.",
-)
-@click.option(
-    "--output", "output_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True),
-    required=True, help="The path to save the structured JSON output.",
-)
+@click.option("--pdf", "pdf_path", type=click.Path(exists=True, dir_okay=False, resolve_path=True), required=True, help="The path to the PDF file to be processed.")
+@click.option("--output", "output_path", type=click.Path(dir_okay=False, writable=True, resolve_path=True), required=True, help="The path to save the structured JSON output.")
 def extract(pdf_path: str, output_path: str):
-    logger.info("--- Evidence Extractor ---")
+    click.secho("--- Evidence Extractor ---", fg="cyan", bold=True)
     logger.info(f"Received request to process PDF: {pdf_path}")
     extraction_result = ArticleExtraction(source_filename=pdf_path)
     gemini_client = GeminiClient()
@@ -69,7 +63,9 @@ def extract(pdf_path: str, output_path: str):
                 summary = generate_summary(gemini_client, extraction_result.claims)
                 if summary:
                     extraction_result.summary = summary
-                    logger.info(f"--- Generated Summary ---\n{summary}\n-----------------------")
+                    click.secho("\n--- Generated Summary ---", fg="green")
+                    click.echo(summary)
+                    click.secho("-----------------------", fg="green")
         figures = extract_figures_and_captions(document, gemini_client)
         if figures: extraction_result.figures = figures
     sections = detect_sections(text_with_newlines)
@@ -87,7 +83,7 @@ def extract(pdf_path: str, output_path: str):
         link_in_text_citations(body_text, extraction_result.bibliography)
     save_to_json(extraction_result, output_path)
     document.close()
-    logger.info("Processing complete.")
+    click.secho("\nProcessing complete.", fg="green", bold=True)
     sys.exit(0)
 
 @cli.command()

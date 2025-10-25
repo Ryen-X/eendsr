@@ -2,11 +2,11 @@
   "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
   "title": null,
   "authors": [],
-  "summary": "Unaided human detection of AI-generated images proved modest and asymmetric, achieving an aggregate accuracy of 60.3%. Participants identified real images with significantly greater reliability (67.8% accuracy) than AI-generated images (52.8% accuracy), indicating an authenticity bias where AI-generated content is more often mislabeled as real than genuine images are misidentified as AI-generated. Despite this inherent asymmetry and modest overall performance, a modest upward drift in weekly mean accuracy was observed over a 55-week period.",
+  "summary": "Humans demonstrated an aggregate accuracy of 60.3% in detecting AI-generated images, with class-conditional analysis revealing superior performance in identifying real images (67.8%) compared to AI-generated images (52.8%). This difference was primarily due to an authenticity bias, leading participants to more often label AI images as real rather than vice versa. A modest upward drift in human detection accuracy was also observed over the 55-week deployment period.",
   "records_excluded_count": 0,
   "claims": [
     {
-      "claim_text": "Human aggregate accuracy in detecting AI-generated images was 60.3%.",
+      "claim_text": "Humans achieved an aggregate accuracy of 60.3% in detecting AI-generated images.",
       "linked_citations": [],
       "provenance": {
         "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
@@ -14,7 +14,7 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim uses definitive language ('was') to state a specific, measured numerical result.",
+      "uncertainty_annotation": "High: Uses definitive language (\"achieved\") and precise numerical data.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -22,15 +22,15 @@
       }
     },
     {
-      "claim_text": "Class-conditional accuracy for ground-truth real images was 67.8%.",
+      "claim_text": "Class-conditional accuracy was 67.8% for real images and 52.8% for AI images.",
       "linked_citations": [],
       "provenance": {
         "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-        "page_number": -1,
+        "page_number": 1,
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim uses definitive language ('was') to state a specific, measured numerical result.",
+      "uncertainty_annotation": "High: Uses definitive language (\"was\") and precise numerical data, indicating a direct measurement or finding.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -38,7 +38,7 @@
       }
     },
     {
-      "claim_text": "Class-conditional accuracy for ground-truth AI-generated images was 52.8%.",
+      "claim_text": "A modest upward drift in human detection accuracy was observed over the 55-week deployment.",
       "linked_citations": [],
       "provenance": {
         "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
@@ -46,7 +46,7 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim uses definitive language ('was') to state a specific, measured numerical result.",
+      "uncertainty_annotation": "High: States a direct observation (\"was observed\"), indicating a definite finding or trend.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -54,7 +54,7 @@
       }
     },
     {
-      "claim_text": "Participants identify real images more reliably than AI-generated images, demonstrating an asymmetry in detection.",
+      "claim_text": "Participants exhibited an authenticity bias, more often labeling AI-generated images as real than real images as AI-generated.",
       "linked_citations": [],
       "provenance": {
         "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
@@ -62,55 +62,7 @@
         "line_number": null,
         "bounding_box": null
       },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim uses definitive language ('identify more reliably', 'demonstrating') to describe an observed pattern and its implication.",
-      "correction_metadata": {
-        "status": "unverified",
-        "reviewer_comment": null,
-        "last_reviewed": null
-      }
-    },
-    {
-      "claim_text": "An authenticity bias exists where AI-generated images are more often labeled as real than real images are labeled as AI-generated.",
-      "linked_citations": [],
-      "provenance": {
-        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-        "page_number": -1,
-        "line_number": null,
-        "bounding_box": null
-      },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim uses definitive language ('exists', 'are more often labeled') to state the presence and nature of a bias.",
-      "correction_metadata": {
-        "status": "unverified",
-        "reviewer_comment": null,
-        "last_reviewed": null
-      }
-    },
-    {
-      "claim_text": "Weekly mean accuracy over 55 weeks showed a modest upward drift.",
-      "linked_citations": [],
-      "provenance": {
-        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-        "page_number": -1,
-        "line_number": null,
-        "bounding_box": null
-      },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim uses definitive language ('showed') to describe an observed trend.",
-      "correction_metadata": {
-        "status": "unverified",
-        "reviewer_comment": null,
-        "last_reviewed": null
-      }
-    },
-    {
-      "claim_text": "Unaided human detection of AI-generated images is modest and asymmetric.",
-      "linked_citations": [],
-      "provenance": {
-        "source_filename": "C:\\Users\\Aaryan\\Desktop\\eendsr\\data\\raw\\sample.pdf",
-        "page_number": -1,
-        "line_number": null,
-        "bounding_box": null
-      },
-      "uncertainty_annotation": "Confidence: High. Justification: The claim uses definitive language ('is modest and asymmetric') to characterize the detection capability.",
+      "uncertainty_annotation": "High: Uses definitive language (\"exhibited\") to describe a clearly observed characteristic or behavior.",
       "correction_metadata": {
         "status": "unverified",
         "reviewer_comment": null,
@@ -120,9 +72,9 @@
   ],
   "pico_elements": {
     "population": "1,217 unique participants",
-    "intervention": "Human ability to detect AI-generated images through forced-choice classifications (Real vs. AI) on a balanced stimulus set (223 real; 223 AI) using the TYCOV web application.",
-    "comparison": "Detection accuracy for real images compared to AI-generated images.",
-    "outcome": "Overall accuracy, class-conditional accuracies (real vs. AI), weekly accuracy trends, and confusion matrix analysis to identify biases.",
+    "intervention": "Forced-choice classification task to distinguish AI-generated images from real images",
+    "comparison": "Detection accuracy for real images versus AI-generated images; implicitly compared against chance performance (50%)",
+    "outcome": "Aggregate accuracy, class-conditional accuracies (real vs. AI), longitudinal accuracy trends over 55 weeks, and patterns in confusion matrix (authenticity bias)",
     "provenance": [],
     "correction_metadata": {
       "status": "unverified",
@@ -134,7 +86,7 @@
     {
       "score_name": "Methodological Quality",
       "score_value": "Low",
-      "justification": "The study is a large-scale, year-long observational behavioral study (public deployment of a web application) measuring human perception. While robust for its type, it does not involve randomization or comparison groups in the manner of an RCT, nor does it follow a defined cohort for specific outcomes, or perform a systematic review. It most closely aligns with characteristics of a cross-sectional experimental design with a longitudinal monitoring component, falling under the 'Low' category per the provided criteria.",
+      "justification": "The study is a large-scale, open-source web application deployment collecting observational data on human perception from self-selected participants over 55 weeks. While it has a longitudinal aspect, its core design is akin to a large-scale cross-sectional behavioral study, lacking random assignment or a control group typical of higher-quality designs like RCTs or controlled cohort studies.",
       "provenance": null,
       "correction_metadata": {
         "status": "unverified",
