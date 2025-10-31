@@ -5,9 +5,10 @@ import pytest
 
 from evidence_extractor.extraction.tables import extract_tables_with_llm
 
-MINIMAL_PNG_B64 ="""
+MINIMAL_PNG_B64 = """
 iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=
 """
+
 
 @pytest.fixture
 def mock_gemini_client(mocker):
