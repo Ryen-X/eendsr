@@ -1,12 +1,14 @@
 import logging
 from datetime import datetime
+
 from evidence_extractor.models.schemas import ArticleExtraction
 
 logger = logging.getLogger(__name__)
 
+
 def generate_prisma_text_report(extraction: ArticleExtraction) -> str:
     logger.info("Generating PRISMA text report.")
-    
+
     report_lines = []
     now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
     report_lines.append("=" * 50)
@@ -28,11 +30,15 @@ def generate_prisma_text_report(extraction: ArticleExtraction) -> str:
     num_scores = len(extraction.quality_scores)
     if num_scores > 0:
         score_status = extraction.quality_scores[0].correction_metadata.status.value
-        report_lines.append(f"- Quality Scores: {num_scores} Found (Primary Status: {score_status})")
+        report_lines.append(
+            f"- Quality Scores: {num_scores} Found (Primary Status: {score_status})"
+        )
     else:
         report_lines.append("- Quality Scores: Not Found")
     num_claims = len(extraction.claims)
-    verified_claims = sum(1 for c in extraction.claims if c.correction_metadata.status == "verified")
+    verified_claims = sum(
+        1 for c in extraction.claims if c.correction_metadata.status == "verified"
+    )
     report_lines.append(f"- Claims: {num_claims} Found ({verified_claims} verified)")
     num_tables = len(extraction.tables)
     num_figures = len(extraction.figures)
@@ -47,10 +53,11 @@ def generate_prisma_text_report(extraction: ArticleExtraction) -> str:
 
     return "\n".join(report_lines)
 
+
 def save_prisma_report(report_content: str, output_path: str):
     logger.info(f"Saving PRISMA report to '{output_path}'...")
     try:
-        with open(output_path, 'w', encoding='utf-8') as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             f.write(report_content)
         logger.info("PRISMA report saved successfully.")
     except IOError as e:

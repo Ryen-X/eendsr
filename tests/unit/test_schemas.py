@@ -1,11 +1,11 @@
-import pytest
 from evidence_extractor.models.schemas import (
     ArticleExtraction,
     Claim,
+    CorrectionMetadata,
     Provenance,
     ValidationStatus,
-    CorrectionMetadata
 )
+
 
 def test_provenance_creation():
     p = Provenance(source_filename="test.pdf", page_number=1)
@@ -13,10 +13,11 @@ def test_provenance_creation():
     assert p.page_number == 1
     assert p.line_number is None
 
+
 def test_claim_creation_and_defaults():
     p = Provenance(source_filename="test.pdf", page_number=5)
     claim = Claim(claim_text="This is a test claim.", provenance=p)
-    
+
     assert claim.claim_text == "This is a test claim."
     assert claim.provenance.page_number == 5
     assert claim.linked_citations == []
@@ -25,9 +26,10 @@ def test_claim_creation_and_defaults():
     assert claim.correction_metadata.status == ValidationStatus.UNVERIFIED
     assert claim.correction_metadata.reviewer_comment is None
 
+
 def test_article_extraction_creation_and_defaults():
     article = ArticleExtraction(source_filename="article.pdf")
-    
+
     assert article.source_filename == "article.pdf"
     assert article.authors == []
     assert article.claims == []
@@ -39,11 +41,13 @@ def test_article_extraction_creation_and_defaults():
     assert article.pico_elements is None
     assert article.records_excluded_count == 0
 
+
 def test_correction_metadata_defaults():
     meta = CorrectionMetadata()
     assert meta.status == ValidationStatus.UNVERIFIED
     assert meta.reviewer_comment is None
     assert meta.last_reviewed is None
+
 
 def test_validation_status_enum():
     assert ValidationStatus.UNVERIFIED == "unverified"

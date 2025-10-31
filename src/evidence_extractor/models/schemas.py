@@ -1,7 +1,9 @@
-from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, Field
+
 
 class ValidationStatus(str, Enum):
     UNVERIFIED = "unverified"
@@ -9,16 +11,19 @@ class ValidationStatus(str, Enum):
     REJECTED = "rejected"
     EDITED = "edited"
 
+
 class CorrectionMetadata(BaseModel):
     status: ValidationStatus = Field(default=ValidationStatus.UNVERIFIED)
     reviewer_comment: Optional[str] = Field(None)
     last_reviewed: Optional[datetime] = Field(None)
+
 
 class Provenance(BaseModel):
     source_filename: str = Field(...)
     page_number: int = Field(...)
     line_number: Optional[int] = Field(None)
     bounding_box: Optional[List[float]] = Field(None)
+
 
 class PICO(BaseModel):
     population: Optional[str] = Field(None)
@@ -28,12 +33,14 @@ class PICO(BaseModel):
     provenance: List[Provenance] = Field(default_factory=list)
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
+
 class QualityScore(BaseModel):
     score_name: str = Field(...)
     score_value: str = Field(...)
     justification: Optional[str] = Field(None)
     provenance: Optional[Provenance] = Field(None)
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
+
 
 class Claim(BaseModel):
     claim_text: str = Field(...)
@@ -42,14 +49,21 @@ class Claim(BaseModel):
     uncertainty_annotation: Optional[str] = Field(None)
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
+
 class ExtractedTable(BaseModel):
-    summary: Optional[str] = Field(None, description="An AI-generated summary of the table's main finding.")
+    summary: Optional[str] = Field(
+        None, description="An AI-generated summary of the table's main finding."
+    )
     table_data: List[Dict[str, Any]] = Field(
         ...,
-        description="The table content, represented as a list of rows, where each row is a dictionary."
+        description=(
+            "The table content, represented as a list of rows, where each row is a "
+            "dictionary."
+        ),
     )
     provenance: Provenance
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
+
 
 class ExtractedFigure(BaseModel):
     caption: str = Field(...)
@@ -57,9 +71,11 @@ class ExtractedFigure(BaseModel):
     provenance: Provenance
     correction_metadata: CorrectionMetadata = Field(default_factory=CorrectionMetadata)
 
+
 class BibliographyItem(BaseModel):
     citation_key: str = Field(...)
     full_citation: str = Field(...)
+
 
 class ArticleExtraction(BaseModel):
     source_filename: str

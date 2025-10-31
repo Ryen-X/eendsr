@@ -1,7 +1,9 @@
-import pytest
-import fitz 
 from pathlib import Path
 from typing import Generator
+
+import fitz
+import pytest
+
 
 @pytest.fixture(scope="session")
 def mock_pdf_path(tmp_path_factory) -> Generator[Path, None, None]:
@@ -9,7 +11,7 @@ def mock_pdf_path(tmp_path_factory) -> Generator[Path, None, None]:
     file_path = pdf_dir / "test_document.pdf"
 
     doc = fitz.open()
-    
+
     page1 = doc.new_page()
     page1.insert_text((50, 72), "This is the first page.")
     page1.insert_text((50, 100), "It contains some simple text for extraction.")
@@ -20,5 +22,5 @@ def mock_pdf_path(tmp_path_factory) -> Generator[Path, None, None]:
 
     doc.save(file_path)
     doc.close()
-    
+
     yield file_path

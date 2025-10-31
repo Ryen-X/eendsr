@@ -1,10 +1,12 @@
-import logging
 import json
+import logging
 from typing import Optional
+
 from evidence_extractor.integration.gemini_client import GeminiClient
 from evidence_extractor.models.schemas import PICO
 
 logger = logging.getLogger(__name__)
+
 
 def extract_pico_elements(client: GeminiClient, text_snippet: str) -> Optional[PICO]:
     if not client.is_configured():
@@ -20,9 +22,11 @@ def extract_pico_elements(client: GeminiClient, text_snippet: str) -> Optional[P
     - Outcome: The primary results or effects that were measured.
 
     Extract these four elements and return them as a single, valid JSON object.
-    The JSON object should have the keys "population", "intervention", "comparison", and "outcome".
+    The JSON object should have the keys "population", "intervention", "comparison",
+    and "outcome".
     If a specific element cannot be found in the text, its value should be null.
-    Do not include any explanatory text or markdown formatting before or after the JSON object.
+    Do not include any explanatory text or markdown formatting before or after the
+    JSON object.
 
     --- TEXT ---
     {text_snippet}
@@ -39,13 +43,18 @@ def extract_pico_elements(client: GeminiClient, text_snippet: str) -> Optional[P
         return None
 
     try:
-        cleaned_response = response_text.strip().replace("```json", "").replace("```", "").strip()
+        cleaned_response = (
+            response_text.strip().replace("```json", "").replace("```", "").strip()
+        )
         pico_data = json.loads(cleaned_response)
         pico_model = PICO(**pico_data)
         logger.info("Successfully extracted and parsed PICO elements.")
         return pico_model
     except json.JSONDecodeError:
-        logger.error(f"Failed to decode JSON response from Gemini for PICO extraction. Response was:\n{response_text}")
+        logger.error(
+            "Failed to decode JSON response from Gemini for PICO extraction. "
+            f"Response was:\n{response_text}"
+        )
         return None
     except Exception as e:
         logger.error(f"An error occurred while creating PICO model: {e}")

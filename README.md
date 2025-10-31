@@ -1,15 +1,15 @@
 # Evidence-Extractor for Narrow-Domain Systematic Reviews
 
-**A research software project for semi-automated evidence extraction from scholarly articles using Large Language Models.**
-
+[![Python package CI](https://github.com/ryen-x/eendsr/actions/workflows/python-package.yml/badge.svg)](https://github.com/your-username/evidence-extractor/actions/workflows/python-package.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python package CI](https://github.com/ryen-x/eendsr/actions/workflows/python-package.yml/badge.svg)](https://github.com/ryen-x/eendsr/actions/workflows/python-package.yml)
+
+**A research software project for semi-automated evidence extraction from scholarly articles using Large Language Models.**
 
 ## Overview
 
 Manual screening and structured evidence extraction is a slow and inconsistent bottleneck for systematic reviews. This project, `evidence-extractor`, provides a domain-specific, reproducible tool to accelerate this process by leveraging Google's Gemini models. It ingests PDF articles and outputs structured claims, PICO fields, quality scores, and detailed provenance.
 
-This is not a generic "PaperGPT"; it is designed to be tuned to a specific domain (e.g., ecology, clinical diagnostics) for higher accuracy and relevance.
+This is not a generic "PaperGPT"; it is designed to be tuned for a specific research domain (e.g., ecology, clinical diagnostics) for higher accuracy and relevance.
 
 ### Core Features
 
@@ -58,10 +58,10 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -e .
 ```
 
-## 3. API Key Setup
-The tool requires a Google Gemini API key.
+### 3. API Key Setup
 
-Obtain a key from [Google AI Studio](https://aistudio.google.com).
+The tool requires a Google Gemini API key.
+Obtain a key from Google AI Studio.
 
 Create a file named `.env` in the root of the project directory.
 
@@ -70,47 +70,57 @@ Add your key to the file like this:
 GEMINI_API_KEY="YOUR_API_KEY_HERE"
 ```
 
-### Usage
+## Usage
+The tool provides four main commands: extract, review, export, and evaluate. A typical workflow is to run them in order.
 
-The tool provides three main commands: extract, review, and export:
+Default path to place your PDF will be at `@/data/raw/`
+
+(Please ensure to utilize the same name of your PDF in the following terminal commands)
 
 ### 1. Extract
-This is the main command. It takes a PDF as input and generates a structured JSON file as output.
+This is the main command. It takes a PDF as input (ideally placed in data/raw/) and generates a structured JSON file as output (ideally saved to data/processed/).
 ```
-evidence-extractor extract --pdf path/to/paper.pdf --output results.json
+evidence-extractor extract --pdf data/raw/paper.pdf --output data/processed/paper.json
 ```
 
+
 ### 2. Review
+
 This command starts an interactive session to let you validate the findings in a generated JSON file.
-```
-evidence-extractor review results.json
+
+```bash
+evidence-extractor review data/processed/paper.json
 ```
 
 You will be prompted to (v)erify, (r)eject, or (s)kip each extracted item. Your changes are saved back to the JSON file.
 
-
 ### 3. Export
-This command converts a reviewed JSON file into more user-friendly formats:
-### Export to an Excel spreadsheet
+
+This command converts a reviewed JSON file into more user-friendly formats. You can create a reports/ directory to store these.
+Basic Export (Spreadsheet only):
 ```
-evidence-extractor export results.json --output summary.xlsx
+evidence-extractor export data/processed/paper.json --output reports/paper_summary.xlsx
 ```
 
-### Generate PRISMA text report and flow diagram
+Full Export (Spreadsheet, Text Report, and Diagram):
 ```
-evidence-extractor export results.json --output summary.xlsx --prisma report.txt --prisma-diagram flow
+evidence-extractor export data/processed/paper.json --prisma reports/paper_report.txt --output reports/paper_summary.xlsx --prisma-diagram reports/paper_flow
 ```
 
-## Examples
+### 4. Evaluate (For Research)
 
-For a hands-on guide, please see our example Jupyter Notebooks in the `/examples` directory:
-1.  `01_basic_extraction_workflow.ipynb`: Covers the full `extract` -> `review` -> `export` workflow.
-2.  `02_advanced_pico_extraction.ipynb`: Shows how to use the tool as a Python library in your own scripts.
+This command is used to evaluate the performance of the claim extraction against a manually created "gold standard" file. It calculates precision, recall, and F1-score.
+```
+evidence-extractor evaluate \
+    --pdf tests/data/test_document.pdf \
+    --gold-standard tests/data/gold_standard.json
+```
+
+## Project Status
+
+This software is currently in a pre-release state and is under active development as part of a research project. While the core features are functional, users should be aware of the API and bugs may be present. We welcome feedback and contributions to help improve its stability and utility.
 
 ## Contributing
-
-Contributions are welcome! We encourage you to report bugs, suggest features, or submit pull requests. Please see our [**Contributing Guidelines**](CONTRIBUTING.md) for more details on how to get started.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Contributions are welcome! We encourage you to report bugs, suggest features, or submit pull requests. Please see our Contributing Guidelines for more details on how to get started.
+License
+This project is licensed under the MIT License - see the LICENSE file for details.

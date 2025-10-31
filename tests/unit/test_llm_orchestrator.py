@@ -1,10 +1,14 @@
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
+
 from evidence_extractor.extraction.llm_orchestrator import orchestrate_llm_extraction
+
 
 @pytest.fixture
 def mock_gemini_client():
     return MagicMock()
+
 
 def test_orchestrator_happy_path(mock_gemini_client):
     mock_response = """
@@ -34,11 +38,13 @@ def test_orchestrator_happy_path(mock_gemini_client):
     assert len(result["claims"]) == 2
     assert result["claims"][0]["claim_text"] == "Claim 1"
 
+
 def test_orchestrator_malformed_json(mock_gemini_client):
     mock_response = '{"pico": {"population": "Test"}'
     mock_gemini_client.query.return_value = mock_response
     result = orchestrate_llm_extraction(mock_gemini_client, "some text")
     assert result is None
+
 
 def test_orchestrator_no_response(mock_gemini_client):
     mock_gemini_client.query.return_value = None

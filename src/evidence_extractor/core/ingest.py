@@ -1,16 +1,18 @@
 import logging
-from typing import Optional
-import fitz 
 import os
+from typing import Optional
+
+import fitz
 
 logger = logging.getLogger(__name__)
+
 
 def ingest_pdf(pdf_path: str) -> Optional[fitz.Document]:
     logger.info(f"Attempting to ingest PDF from: {pdf_path}")
     if not os.path.exists(pdf_path):
         logger.error(f"File not found at path: '{pdf_path}'")
         return None
-    if not pdf_path.lower().endswith('.pdf'):
+    if not pdf_path.lower().endswith(".pdf"):
         logger.error(f"File '{pdf_path}' is not a PDF. Ingestion failed.")
         return None
 
