@@ -21,7 +21,11 @@ def mock_claims_list():
 
 
 def test_annotate_claims_in_batch_happy_path(mock_gemini_client, mock_claims_list):
-    mock_response = '[{"claim_index": 1, "annotation": "Confidence: High. Justification: Strong words."}, {"claim_index": 2, "annotation": "Confidence: Low. Justification: Weak words."}]'
+    mock_response = """
+    [{"claim_index": 1, "annotation": "Confidence: High. Justification: Strong words."},
+     {"claim_index": 2, "annotation": "Confidence: Low. Justification: Weak words."}]
+    """
+
     mock_gemini_client.query.return_value = mock_response
     annotate_claims_in_batch(mock_gemini_client, mock_claims_list)
     assert mock_claims_list[0].uncertainty_annotation is not None
