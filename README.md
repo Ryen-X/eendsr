@@ -111,9 +111,7 @@ evidence-extractor export data/processed/paper.json --prisma reports/paper_repor
 
 This command is used to evaluate the performance of the claim extraction against a manually created "gold standard" file. It calculates precision, recall, and F1-score.
 ```
-evidence-extractor evaluate \
-    --pdf tests/data/test_document.pdf \
-    --gold-standard tests/data/gold_standard.json
+evidence-extractor evaluate --pdf tests/data/test_document.pdf --gold-standard tests/data/gold_standard.json
 ```
 
 ## Project Status
