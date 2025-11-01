@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Singh"
+    given-names: "Aaryan"
+    orcid: "https://orcid.org/0009-0004-0832-0161"
+title: "Evidence-Extractor: A Tool for Semi-Automated Extraction in Narrow-Domain Systematic Reviews"
+version: 1.0.0
+date-released: 2025-11-01
+url: "https://github.com/ryen-x/eendsr"
