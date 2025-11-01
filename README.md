@@ -1,6 +1,6 @@
 # Evidence-Extractor for Narrow-Domain Systematic Reviews
 
-[![Python package CI](https://github.com/ryen-x/eendsr/actions/workflows/python-package.yml/badge.svg)](https://github.com/your-username/evidence-extractor/actions/workflows/python-package.yml)
+[![Python Package CI](https://github.com/Ryen-X/eendsr/actions/workflows/python-package.yml/badge.svg)](https://github.com/Ryen-X/eendsr/actions/workflows/python-package.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **A research software project for semi-automated evidence extraction from scholarly articles using Large Language Models.**
