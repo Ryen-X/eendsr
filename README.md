@@ -2,6 +2,7 @@
 
 [![Python Package CI](https://github.com/Ryen-X/eendsr/actions/workflows/python-package.yml/badge.svg)](https://github.com/Ryen-X/eendsr/actions/workflows/python-package.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17499556.svg)](https://doi.org/10.5281/zenodo.17499556)
 
 **A research software project for semi-automated evidence extraction from scholarly articles using Large Language Models.**
 
