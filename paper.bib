@@ -1,15 +1,5 @@
 % --- Citations for the JOSS Paper ---
 
-@misc{fitz,
-  author       = {Jorj X. McKie and contributors},
-  title        = {PyMuPDF},
-  year         = {2024},
-  publisher    = {GitHub},
-  journal      = {GitHub repository},
-  howpublished = {\url{https://github.com/pymupdf/PyMuPDF}},
-  note         = {Version 1.24.0}
-}
-
 @inproceedings{camelot,
   author       = {Gaur, Vinayak and A. K., Pratik},
   title        = {Camelot: A Python Library to Extract Tabular Data from PDFs},
@@ -19,12 +9,36 @@
   doi          = {10.25080/Majora-4af1f417-006}
 }
 
+@techreport{graphviz,
+  author       = {Gansner, Emden R. and North, Stephen C.},
+  title        = {An open graph visualization system and its applications to software engineering},
+  institution  = {AT\&T Bell Laboratories},
+  year         = {1999},
+  number       = {SE-99-01},
+  doi          = {10.1007/3-540-44566-5_31}
+}
+
 @article{gemini2023,
   author       = {Gemini Team and others},
   title        = {Gemini: A Family of Highly Capable Multimodal Models},
   year         = {2023},
-  journal      = {arXiv preprint arXiv:2312.11805},
+  journal      = {arXiv preprint},
+  archivePrefix = {arXiv},
+  eprint       = {2312.11805},
+  primaryClass = {cs.CL},
   howpublished = {\url{https://arxiv.org/abs/2312.11805}}
+}
+
+% --- Citations for Key Software Libraries (without DOIs) ---
+% For software without a canonical DOI, citing the official URL is the
+% accepted best practice in JOSS submissions.
+
+@misc{fitz,
+  author       = {Jorj X. McKie and contributors},
+  title        = {PyMuPDF},
+  year         = {2024},
+  publisher    = {GitHub},
+  howpublished = {\url{https://github.com/pymupdf/PyMuPDF}}
 }
 
 @misc{pydantic,
@@ -32,7 +46,6 @@
   title        = {Pydantic},
   year         = {2024},
   publisher    = {GitHub},
-  journal      = {GitHub repository},
   howpublished = {\url{https://github.com/pydantic/pydantic}}
 }
 
@@ -40,9 +53,7 @@
   author       = {The Pallets Projects},
   title        = {Click},
   year         = {2024},
-  publisher    = {GitHub},
-  journal      = {GitHub repository},
-  howpublished = {\url{https://github.com/pallets/click}}
+  howpublished = {\url{https://palletsprojects.com/p/click/}}
 }
 
 @misc{pytest,
@@ -54,11 +65,9 @@
 
 @misc{pillow,
   author       = {Alex Clark and contributors},
-  title        = {Pillow},
+  title        = {Pillow (The Python Imaging Library Fork)},
   year         = {2024},
-  publisher    = {GitHub},
-  journal      = {GitHub repository},
-  howpublished = {\url{https://github.com/python-pillow/Pillow}}
+  howpublished = {\url{https://python-pillow.org}}
 }
 
 @misc{openpyxl,
@@ -73,15 +82,5 @@
   title        = {thefuzz},
   year         = {2024},
   publisher    = {GitHub},
-  journal      = {GitHub repository},
   howpublished = {\url{https://github.com/seatgeek/thefuzz}}
-}
-
-@techreport{graphviz,
-  author       = {Gansner, Emden R. and North, Stephen C.},
-  title        = {An open graph visualization system and its applications to software engineering},
-  institution  = {AT\&T Bell Laboratories},
-  year         = {1999},
-  number       = {SE-99-01},
-  doi          = {10.1007/3-540-44566-5_31}
 }
